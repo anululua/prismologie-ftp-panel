@@ -58,3 +58,6 @@ frontend
 vendor/                  contains dependent 3rd-party packages
 environments/            contains environment-based overrides
 ```
+
+# Prismologie
+Basic website for different user logins (admin, user with (R/W) and public user.
