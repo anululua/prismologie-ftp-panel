@@ -18,7 +18,7 @@ use frontend\models\ContactForm;
  */
 class SiteController extends Controller
 {
-    public $defaultAction = 'login';
+    //public $defaultAction = 'login';
     /**
      * {@inheritdoc}
      */
@@ -107,7 +107,8 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(['login']);
+        //return $this->goHome();
     }
 
     /**

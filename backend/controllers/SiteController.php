@@ -6,13 +6,16 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use frontend\models\PasswordResetRequestForm;
+use frontend\models\ResetPasswordForm;
+use frontend\models\SignupForm;
+
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
-    //public $defaultAction = 'login';
     /**
      * {@inheritdoc}
      */
@@ -25,9 +28,10 @@ class SiteController extends Controller
                     [
                         'actions' => ['login', 'error'],
                         'allow' => true,
+                        'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'admin','moderator','signup','index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -63,6 +67,26 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+    
+    /**
+     * Displays admin homepage.
+     *
+     * @return string
+     */
+    public function actionAdmin()
+    {
+        return $this->render('admin');
+    }
+    
+    /**
+     * Displays moderator homepage.
+     *
+     * @return string
+     */
+    public function actionModerator()
+    {
+        return $this->render('moderator');
+    }
 
     /**
      * Login action.
@@ -71,22 +95,100 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+                
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
+
+            if($userRole === 'admin')
+                return $this->redirect(['admin']);
+            else if($userRole === 'moderator')
+                return $this->redirect(['moderator']);
+            else
+                return $this->redirect(['index']);
         } else {
             $model->password = '';
-
             return $this->render('login', [
                 'model' => $model,
             ]);
         }
     }
 
+    /**
+     * Signs user up.
+     *
+     * @return mixed
+     */
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Requests password reset.
+     *
+     * @return mixed
+     */
+    public function actionRequestPasswordReset()
+    {
+        $model = new PasswordResetRequestForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendEmail()) {
+                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+
+                return $this->goHome();
+            } else {
+                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
+            }
+        }
+
+        return $this->render('requestPasswordResetToken', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Resets password.
+     *
+     * @param string $token
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+    public function actionResetPassword($token)
+    {
+        try {
+            $model = new ResetPasswordForm($token);
+        } catch (InvalidParamException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+            Yii::$app->session->setFlash('success', 'New password saved.');
+
+            return $this->goHome();
+        }
+
+        return $this->render('resetPassword', [
+            'model' => $model,
+        ]);
+    }
+    
+    
     /**
      * Logout action.
      *
@@ -95,7 +197,6 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 }
