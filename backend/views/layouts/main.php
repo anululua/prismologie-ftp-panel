@@ -31,39 +31,19 @@ AppAsset::register($this);
         <?php $this->beginBody() ?>
 
         <div class="wrap">
-            <?php
 
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-  if (!Yii::$app->user->isGuest) {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
-      
-          echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
-    }
+            <div class="container">
 
-    NavBar::end();
-    ?>
-
-                <div class="container">
+                <div class="row">
                     <?php
-                    if (!Yii::$app->user->isGuest){
-                        echo Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]);?>
+                    if (!Yii::$app->user->isGuest){?>
+
+                        <div class="row">
+                            <?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['site/logout'], ['class' => 'btn btn-link logout pull-right'], ['data' => ['method' => 'post']]); ?>
+                        </div>
+
+                        <?php 
+                        echo Breadcrumbs::widget([ 'homeLink' => [ 'label' => Yii::t('yii', 'Home'), 'url' => Yii::$app->homeUrl, ], 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]);?>
 
                         <div class="sidenav">
 
@@ -73,11 +53,14 @@ AppAsset::register($this);
 
                         </div>
                         <?php }?>
-
-                        <?= Alert::widget() ?>
-
-                            <?= $content ?>
                 </div>
+
+
+
+                <?= Alert::widget() ?>
+
+                    <?= $content ?>
+            </div>
         </div>
 
         <?php $this->endBody() ?>

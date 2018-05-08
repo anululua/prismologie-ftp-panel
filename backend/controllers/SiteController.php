@@ -6,9 +6,9 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
+use backend\models\PasswordResetRequestForm;
+use backend\models\ResetPasswordForm;
+use backend\models\SignupForm;
 
 
 /**
@@ -31,7 +31,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout', 'admin','moderator','signup','index'],
+                        'actions' => ['logout', 'admin','moderator','signup','index','update'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -76,6 +76,7 @@ class SiteController extends Controller
     public function actionAdmin()
     {
         return $this->render('admin');
+        
     }
     
     /**
@@ -128,12 +129,11 @@ class SiteController extends Controller
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
+                if (Yii::$app->getUser()) {
+                    $this->redirect(['//admin/user']);
                 }
             }
         }
-
         return $this->render('signup', [
             'model' => $model,
         ]);

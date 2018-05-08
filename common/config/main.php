@@ -11,6 +11,7 @@ return [
         ],
         'admin' => [
             'class' => 'mdm\admin\Module',
+            //'layout' => 'left-menu',
         ],
     ],
     'components' => [
@@ -20,9 +21,15 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
-        /*'user' => [
-            'identityClass' => 'mdm\admin\models\User',
-            'loginUrl' => ['admin/user/login'],
-        ],*/
+    ],
+    
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'site/*',
+            'admin/*',
+            // The actions listed here will be allowed to everyone including guests.
+            // So, 'admin/*' should not appear here in the production, of course.
+        ]
     ],
 ];
