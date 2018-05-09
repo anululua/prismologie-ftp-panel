@@ -30,38 +30,71 @@ AppAsset::register($this);
     <body>
         <?php $this->beginBody() ?>
 
-        <div class="wrap">
+        <div class="container-fluid">
 
-            <div class="container">
-
-                <div class="row">
-                    <?php
+            <div class="row">
+                <div class="wrapper">
+                    <!-- Sidebar Holder -->
+                    <nav id="sidebar">
+                        <div class="sidebar-header">
+                            <h3>Prismologie</h3>
+                        </div>
+                        <?php
                     if (!Yii::$app->user->isGuest){?>
+                            <ul class="list-unstyled components">
+                                <li class="active">
+                                    <?= Html::a('Users', ['//admin/user']) ?>
+                                </li>
+                                <li>
+                                    <?= Html::a('Roles', ['//admin/role']) ?>
+                                </li>
+                                <li>
+                                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Categories</a>
+                                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                                        <?= Html::a('Create Categories', ['//categories/create']) ?>
+                                            <li><a href="#"></a></li>
+                                            <li><a href="#">Films</a></li>
+                                            <li><a href="#">Jewellery</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <?php }?>
+                    </nav>
 
-                        <div class="row">
-                            <?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['site/logout'], ['class' => 'btn btn-link logout pull-right'], ['data' => ['method' => 'post']]); ?>
-                        </div>
+                    <!-- Page Content Holder -->
+                    <div id="content" class="container">
 
-                        <?php 
-                        echo Breadcrumbs::widget([ 'homeLink' => [ 'label' => Yii::t('yii', 'Home'), 'url' => Yii::$app->homeUrl, ], 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]);?>
+                        <nav class="navbar navbar-default">
+                            <div class="navbar-header">
+                                <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                                <i class="glyphicon glyphicon-align-left"></i>
+                            </button>
+                            </div>
 
-                        <div class="sidenav">
+                            <?php
+                    if (!Yii::$app->user->isGuest){?>
+                                <div class="pull-right">
+                                    <?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['site/logout'], ['class' => 'btn btn-link logout'], ['data' => ['method' => 'post']]); ?>
 
-                            <?= Html::a('Users', ['//admin/user']) ?>
-                                <?= Html::a('Roles', ['//admin/role']) ?>
-                                    <?= Html::a('Folders', ['//admin/user']) ?>
+                                </div>
+                                <?php }?>
+                        </nav>
 
-                        </div>
-                        <?php }?>
+
+                        <?php
+                    if (!Yii::$app->user->isGuest){?>
+                            <div class="row">
+                                <?= Breadcrumbs::widget([ 'homeLink' => [ 'label' => Yii::t('yii', 'Home'), 'url' => Yii::$app->homeUrl, ], 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]);?>
+                            </div>
+                            <?php }?>
+                            <?= Alert::widget() ?>
+                                <?= $content ?>
+
+                    </div>
                 </div>
-
-
-
-                <?= Alert::widget() ?>
-
-                    <?= $content ?>
             </div>
         </div>
+
 
         <?php $this->endBody() ?>
     </body>

@@ -16,31 +16,28 @@ use backend\models\SignupForm;
  */
 class SiteController extends Controller
 {
+    
+    public $param = 'value';
     /**
      * {@inheritdoc}
      */
     public function behaviors()
-    {
+    {    
         return [
             'access' => [
                 'class' => AccessControl::className(),
+                'only' => ['login', 'logout','error'],
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
                         'allow' => true,
+                        'actions' => ['login', 'signup'],
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout', 'admin','moderator','signup','index','update'],
                         'allow' => true,
+                        'actions' => ['logout'],
                         'roles' => ['@'],
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -197,6 +194,6 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(['login']);
     }
 }

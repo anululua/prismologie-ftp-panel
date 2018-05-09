@@ -37,7 +37,16 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        
+        'assetManager' => [
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'sourcePath' => null,   // do not publish the built in bundle
+                    'js' => [
+                        'https://code.jquery.com/jquery-1.12.0.min.js',
+                    ]
+                ],
+            ],
+        ],
         /*'urlManager' => [ 'enablePrettyUrl' => true, 'showScriptName' => false, 'enableStrictParsing' => false, 'rules' => [ ], ],*/
         
         
