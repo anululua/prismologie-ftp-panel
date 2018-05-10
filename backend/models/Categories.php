@@ -49,6 +49,7 @@ class Categories extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 200],
+            [['name'], 'unique',  'message' => 'This category already created.'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
         ];

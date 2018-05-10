@@ -10,29 +10,44 @@ use yii\grid\GridView;
 $this->title = 'Subcategories';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="subcategories-index">
+    <div class="subcategories-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+        <h1>
+            <?= Html::encode($this->title) ?>
+        </h1>
+        <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Subcategories', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <p>
+            <?= Html::a('Create Subcategories', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
 
-    <?= GridView::widget([
+        <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+           // 'id',
             'name',
-            'cat_id',
-            'status',
-            'created_at',
+            [
+            'header' => 'Category',
+            'attribute' => 'cat.name',
+            ],
+            [
+                'attribute' => 'status',
+                'value' => function($model) {
+                    return $model->status == 0 ? 'Inactive' : 'Active';
+                },
+                'filter' => [
+                    0 => 'Inactive',
+                    10 => 'Active'
+                ]
+            ],
+            'created_at:date',
             //'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'header'=>'Action'],
         ],
     ]); ?>
-</div>
+    </div>

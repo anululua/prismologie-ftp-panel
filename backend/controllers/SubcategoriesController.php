@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use backend\models\Subcategories;
+use backend\models\Categories;
 use backend\models\searches\SubcategoriesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -14,8 +15,6 @@ use yii\filters\VerbFilter;
  */
 class SubcategoriesController extends Controller
 {
-    const STATUS_INACTIVE = 0;
-    const STATUS_ACTIVE = 10;
     /**
      * {@inheritdoc}
      */
@@ -68,8 +67,25 @@ class SubcategoriesController extends Controller
     {
         $model = new Subcategories();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            
+            
+            
+            
+            $subcategoryName = Yii::$app->request->post('SubCategories')['name'];
+            $CategoryId = Yii::$app->request->post('SubCategories')['cat_id'];
+
+            $categoryName= Categories::findOne($CategoryId)['name'];
+            //print_r($categoryName);exit;
+            $path = Yii::getAlias('@backend') . "/web/uploads/". $categoryName."/".$subcategoryName;
+            
+            if (FileHelper::createDirectory($path, $mode = 0777)) {
+                if($model->save()){
+                return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
+            
+            
         }
 
         return $this->render('create', [

@@ -2,30 +2,31 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use backend\models\Categories;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Subcategories */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="subcategories-form">
+    <div class="subcategories-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'cat_id')->textInput() ?>
+            <?php
+        $categories=Categories::find()->all();
+        $listData=ArrayHelper::map($categories,'id','name');
+        echo $form->field($model, 'cat_id')->dropDownList($listData, ['prompt'=>'Choose category']);
+    ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
+                <div class="form-group">
+                    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                </div>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
+                <?php ActiveForm::end(); ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
-
-    <?php ActiveForm::end(); ?>
-
-</div>

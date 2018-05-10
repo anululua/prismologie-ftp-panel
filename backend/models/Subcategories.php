@@ -5,7 +5,7 @@ namespace backend\models;
 use Yii;
 
 /**
- * This is the model class for table "subcategories".
+ * This is the model class for table "sub_categories".
  *
  * @property int $id
  * @property string $name
@@ -14,17 +14,17 @@ use Yii;
  * @property int $created_at
  * @property int $updated_at
  *
- * @property Articles[] $articles
  * @property Categories $cat
+ * @property Articles[] $articles 
  */
-class Subcategories extends \yii\db\ActiveRecord
+class SubCategories extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'subcategories';
+        return 'sub_categories';
     }
 
     /**
@@ -33,9 +33,9 @@ class Subcategories extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'cat_id', 'created_at', 'updated_at'], 'required'],
+            [['name', 'cat_id'], 'required'],
             [['cat_id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 250],
             [['cat_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['cat_id' => 'id']],
         ];
     }
@@ -58,16 +58,18 @@ class Subcategories extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticles()
-    {
-        return $this->hasMany(Articles::className(), ['subcat_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getCat()
     {
         return $this->hasOne(Categories::className(), ['id' => 'cat_id']);
     }
+    
+    
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+   public function getArticles() 
+   { 
+       return $this->hasMany(Articles::className(), ['subcat_id' => 'id']); 
+   } 
+    
 }

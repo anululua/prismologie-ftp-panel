@@ -8,36 +8,36 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="articles-search">
+    <div class="articles-search">
 
-    <?php $form = ActiveForm::begin([
+        <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+        <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'name') ?>
+            <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'filename') ?>
+                <?= $form->field($model, 'filename') ?>
 
-    <?= $form->field($model, 'type') ?>
+                    <?= $form->field($model, 'type') ?>
 
-    <?= $form->field($model, 'uploads_path') ?>
+                        <?= $form->field($model, 'uploads_path') ?>
 
-    <?php // echo $form->field($model, 'subcat_id') ?>
+                            <?php // echo $form->field($model, 'cat_id') ?>
 
-    <?php // echo $form->field($model, 'status') ?>
+                            <?php // echo $form->field($model, 'status') ?>
 
-    <?php // echo $form->field($model, 'created_at') ?>
+                            <?php // echo $form->field($model, 'created_at') ?>
 
-    <?php // echo $form->field($model, 'updated_at') ?>
+                            <?php // echo $form->field($model, 'updated_at') ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+                            <div class="form-group">
+                                <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
+                                    <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+                            </div>
+
+                            <?php ActiveForm::end(); ?>
+
     </div>
-
-    <?php ActiveForm::end(); ?>
-
-</div>

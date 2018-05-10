@@ -8,6 +8,7 @@ use backend\models\searches\CategoriesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\FileHelper;
 
 /**
  * CategoriesController implements the CRUD actions for Categories model.
@@ -66,8 +67,16 @@ class CategoriesController extends Controller
     {
         $model = new Categories();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            
+            $categoryName = Yii::$app->request->post('Categories')['name'];
+            $path = Yii::getAlias('@backend') . "/web/uploads/". $categoryName;
+            
+            if (FileHelper::createDirectory($path, $mode = 0777)) {
+                if($model->save()){
+                return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
         return $this->render('create', [
@@ -85,9 +94,20 @@ class CategoriesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $categoryOld= $model->name;
+        if ($model->load(Yii::$app->request->post())) {
+            
+            $src = Yii::getAlias('@backend') . "/web/uploads/". $categoryOld;
+            
+            $categoryNew = Yii::$app->request->post('Categories')['name'];
+            $dest = Yii::getAlias('@backend') . "/web/uploads/". $categoryNew;
+            FileHelper::createDirectory($dest, $mode = 0777);
+                
+            FileHelper::copyDirectory($src,$dest);
+                if($model->save()){
+                    FileHelper::removeDirectory($src);
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
         }
 
         return $this->render('update', [
@@ -104,6 +124,10 @@ class CategoriesController extends Controller
      */
     public function actionDelete($id)
     {
+        $categoryName= $this->findModel($id)->name;
+        $path = Yii::getAlias('@backend') . "/web/uploads/". $categoryName;
+        FileHelper::removeDirectory($path);
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

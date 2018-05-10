@@ -29,15 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
            // 'id',
             'name',
-            [
-                'attribute' => 'status',
-                'value' => function($model) {
-                    return $model->status == 0 ? 'Inactive' : 'Active';
-                },
-                'filter' => [
-                    0 => 'Inactive',
-                    10 => 'Active'
-                ]
+            [ 
+                'attribute' => 'status', 
+                'value' => function($model) 
+                { 
+                    return $model->status == 0 ? 'Inactive' : 'Active'; 
+                }, 
+                'filter' => [ 0 => 'Inactive', 10 => 'Active' ] 
             ],
             'created_at:date',
             //'updated_at',

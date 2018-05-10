@@ -30,15 +30,21 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            //'id',
             'name',
             'filename',
             'type',
             'uploads_path',
             'subcat_id',
-            'status',
-            'created_at',
-            'updated_at',
+            [ 
+                'attribute' => 'status', 
+                'value' => function($model) 
+                { 
+                    return $model->status == 0 ? 'Inactive' : 'Active'; 
+                }, 
+            ],
+            'created_at:date',
+            'updated_at:date',
         ],
     ]) ?>
 

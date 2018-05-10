@@ -32,67 +32,76 @@ AppAsset::register($this);
 
         <div class="container-fluid">
 
-            <div class="row">
-                <div class="wrapper">
-                    <!-- Sidebar Holder -->
-                    <nav id="sidebar">
-                        <div class="sidebar-header">
-                            <h3>Prismologie</h3>
+            <div class="row wrapper">
+
+                <nav id="sidebar">
+                    <div class="sidebar-header">
+                        <h3>Prismologie</h3>
+                    </div>
+                    <?php
+                    if (!Yii::$app->user->isGuest){?>
+                        <ul class="list-unstyled components">
+                            <li class="active">
+                                <?= Html::a('Users', ['//admin/user']) ?>
+                            </li>
+                            <li>
+                                <?= Html::a('Roles', ['//admin/role']) ?>
+                            </li>
+                            <li>
+                                <?= Html::a('Folders', ['//categories']) ?>
+                            </li>
+                            <li>
+                                <?= Html::a('Sub Folders', ['//subcategories']) ?>
+                            </li>
+                            <li>
+                                <?= Html::a('Upload Utility', ['//articles']) ?>
+                            </li>
+                            <!--<li>
+    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Categories</a>
+    <ul class="collapse list-unstyled" id="homeSubmenu">
+        <?= Html::a('Create Categories', ['//categories/create']) ?>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Films</a></li>
+            <li><a href="#">Jewellery</a></li>
+    </ul>
+</li>-->
+                        </ul>
+                        <?php }?>
+                </nav>
+
+                <!-- Page Content Holder -->
+                <div id="content" class="container">
+
+                    <nav class="navbar navbar-default">
+                        <div class="navbar-header">
+                            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                                <i class="glyphicon glyphicon-align-left"></i>
+                            </button>
                         </div>
+
                         <?php
                     if (!Yii::$app->user->isGuest){?>
-                            <ul class="list-unstyled components">
-                                <li class="active">
-                                    <?= Html::a('Users', ['//admin/user']) ?>
-                                </li>
-                                <li>
-                                    <?= Html::a('Roles', ['//admin/role']) ?>
-                                </li>
-                                <li>
-                                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Categories</a>
-                                    <ul class="collapse list-unstyled" id="homeSubmenu">
-                                        <?= Html::a('Create Categories', ['//categories/create']) ?>
-                                            <li><a href="#"></a></li>
-                                            <li><a href="#">Films</a></li>
-                                            <li><a href="#">Jewellery</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            <div class="pull-right">
+                                <?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['site/logout'], ['class' => 'btn btn-link logout'], ['data' => ['method' => 'post']]); ?>
+
+                            </div>
                             <?php }?>
                     </nav>
 
-                    <!-- Page Content Holder -->
-                    <div id="content" class="container">
 
-                        <nav class="navbar navbar-default">
-                            <div class="navbar-header">
-                                <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
-                                <i class="glyphicon glyphicon-align-left"></i>
-                            </button>
-                            </div>
-
-                            <?php
+                    <?php
                     if (!Yii::$app->user->isGuest){?>
-                                <div class="pull-right">
-                                    <?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['site/logout'], ['class' => 'btn btn-link logout'], ['data' => ['method' => 'post']]); ?>
+                        <div class="row">
+                            <?= Breadcrumbs::widget([ 'homeLink' => [ 'label' => Yii::t('yii', 'Home'), 'url' => Yii::$app->homeUrl, ], 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]);?>
+                        </div>
+                        <?php }?>
+                        <?= Alert::widget() ?>
+                            <?= $content ?>
 
-                                </div>
-                                <?php }?>
-                        </nav>
-
-
-                        <?php
-                    if (!Yii::$app->user->isGuest){?>
-                            <div class="row">
-                                <?= Breadcrumbs::widget([ 'homeLink' => [ 'label' => Yii::t('yii', 'Home'), 'url' => Yii::$app->homeUrl, ], 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]);?>
-                            </div>
-                            <?php }?>
-                            <?= Alert::widget() ?>
-                                <?= $content ?>
-
-                    </div>
                 </div>
+
             </div>
+
         </div>
 
 

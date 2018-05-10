@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\web\UploadedFile; 
 
 /**
  * This is the model class for table "articles".
@@ -17,10 +18,12 @@ use Yii;
  * @property int $created_at
  * @property int $updated_at
  *
- * @property Subcategories $subcat
+ * @property SubCategories $subcat
  */
 class Articles extends \yii\db\ActiveRecord
 {
+    
+    public $file;
     /**
      * {@inheritdoc}
      */
@@ -35,12 +38,13 @@ class Articles extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'filename', 'type', 'uploads_path', 'subcat_id', 'created_at', 'updated_at'], 'required'],
+            [['name', 'subcat_id', ], 'required'],
             [['subcat_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name', 'filename'], 'string', 'max' => 250],
             [['type'], 'string', 'max' => 100],
             [['uploads_path'], 'string', 'max' => 255],
-            [['subcat_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subcategories::className(), 'targetAttribute' => ['subcat_id' => 'id']],
+            [['file'], 'file'],
+            [['subcat_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubCategories::className(), 'targetAttribute' => ['subcat_id' => 'id']],
         ];
     }
 
@@ -55,7 +59,7 @@ class Articles extends \yii\db\ActiveRecord
             'filename' => 'Filename',
             'type' => 'Type',
             'uploads_path' => 'Uploads Path',
-            'subcat_id' => 'Subcat ID',
+            'subcat_id' => 'Subcategory',
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -67,6 +71,6 @@ class Articles extends \yii\db\ActiveRecord
      */
     public function getSubcat()
     {
-        return $this->hasOne(Subcategories::className(), ['id' => 'subcat_id']);
+        return $this->hasOne(SubCategories::className(), ['id' => 'subcat_id']);
     }
 }
