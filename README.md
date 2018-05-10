@@ -61,3 +61,13 @@ environments/            contains environment-based overrides
 
 # Prismologie
 Basic website for different user logins (admin, user with (R/W) and public user.
+
+Installation
+composer create-project --prefer-dist yiisoft/yii2-app-advanced prismologie
+cd prismologie
+git init
+init
+Select Environment =>Yes
+Create DB 
+Adjust values in common/config/main-local.php
+yii migrate
