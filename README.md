@@ -89,3 +89,11 @@ Add  to composer.json [optional]
 composer update --prefer-dist
 
 git init
+
+git add .
+ 
+git commit -m "frst commit"
+
+git remote add origin remote repository URL
+
+git pull origin master
