@@ -77,4 +77,6 @@ Create DB
 
 Adjust values in common/config/main-local.php
 
+composer install
+
 yii migrate
