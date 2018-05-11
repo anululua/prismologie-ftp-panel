@@ -1,6 +1,5 @@
 <?php
 namespace frontend\controllers;
-
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -12,12 +11,12 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
-
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    //public $defaultAction = 'login';
     /**
      * {@inheritdoc}
      */
@@ -48,7 +47,6 @@ class SiteController extends Controller
             ],
         ];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -64,17 +62,15 @@ class SiteController extends Controller
             ],
         ];
     }
-
     /**
      * Displays homepage.
      *
      * @return mixed
      */
-    public function actionIndex()
+    /*public function actionIndex()
     {
         return $this->render('index');
-    }
-
+    }*/
     /**
      * Logs in a user.
      *
@@ -85,19 +81,16 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
             $model->password = '';
-
             return $this->render('login', [
                 'model' => $model,
             ]);
         }
     }
-
     /**
      * Logs out the current user.
      *
@@ -106,10 +99,9 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
-        return $this->goHome();
+        return $this->redirect(['login']);
+        //return $this->goHome();
     }
-
     /**
      * Displays contact page.
      *
@@ -124,7 +116,6 @@ class SiteController extends Controller
             } else {
                 Yii::$app->session->setFlash('error', 'There was an error sending your message.');
             }
-
             return $this->refresh();
         } else {
             return $this->render('contact', [
@@ -132,7 +123,6 @@ class SiteController extends Controller
             ]);
         }
     }
-
     /**
      * Displays about page.
      *
@@ -142,7 +132,6 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-
     /**
      * Signs user up.
      *
@@ -158,12 +147,10 @@ class SiteController extends Controller
                 }
             }
         }
-
         return $this->render('signup', [
             'model' => $model,
         ]);
     }
-
     /**
      * Requests password reset.
      *
@@ -175,18 +162,15 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
                 return $this->goHome();
             } else {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
             }
         }
-
         return $this->render('requestPasswordResetToken', [
             'model' => $model,
         ]);
     }
-
     /**
      * Resets password.
      *
@@ -201,13 +185,10 @@ class SiteController extends Controller
         } catch (InvalidParamException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
-
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->session->setFlash('success', 'New password saved.');
-
             return $this->goHome();
         }
-
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
