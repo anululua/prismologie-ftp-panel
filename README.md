@@ -67,8 +67,6 @@ composer create-project --prefer-dist yiisoft/yii2-app-advanced prismologie
 
 cd prismologie
 
-git init
-
 init
 
 Select Environment =>Yes
@@ -77,6 +75,17 @@ Create DB
 
 Adjust values in common/config/main-local.php
 
-composer install
-
 yii migrate
+
+Add  to composer.json [optional]
+
+"extra": {
+          "asset-installer-paths": {
+              "npm-asset-library": "vendor/npm",
+              "bower-asset-library": "vendor/bower"
+          }
+      }, 
+          
+composer update --prefer-dist
+
+git init
