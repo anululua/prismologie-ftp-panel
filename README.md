@@ -65,28 +65,36 @@ Basic website for different user logins (admin, user with (R/W) and public user.
 Installation
 composer create-project --prefer-dist yiisoft/yii2-app-advanced prismologie
 
-cd prismologie
+cmd cd prismologie
 
-init
+cmd init
 
 Select Environment =>Yes
+
+cmd composer require mdmsoft/yii2-admin "~2.0"
 
 Create DB 
 
 Adjust values in common/config/main-local.php
 
-yii migrate
+cmd yii migrate --migrationPath=@mdm/admin/migrations
 
-Add  to composer.json [optional]
+Add 'class' => 'mdm\admin\models\User', to user object under components in common/config/main.php before migration
 
-"extra": {
-          "asset-installer-paths": {
-              "npm-asset-library": "vendor/npm",
-              "bower-asset-library": "vendor/bower"
-          }
-      }, 
+cmd yii migrate --migrationPath=@yii/rbac/migrations
+
+Remove 'class' => 'mdm\admin\models\User', from user object under components in common/config/main.php after migration
           
-composer update --prefer-dist
+'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'site/*',
+            'admin/*',
+        ]
+    ],
+Add to common/config/main.php in components object
+
+composer update --prefer-dist   //no need
 
 git init
 
