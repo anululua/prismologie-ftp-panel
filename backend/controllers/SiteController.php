@@ -17,7 +17,7 @@ use frontend\models\SignupForm;
 class SiteController extends Controller
 {
     
-    public $param = 'value';
+    public $defaultAction = 'login';
     /**
      * {@inheritdoc}
      */
@@ -26,17 +26,21 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['login', 'logout','error'],
+                //'only' => ['login', 'logout','error'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['login', 'signup'],
+                        'actions' => ['login', 'index','error'],
                         'roles' => ['?'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['logout'],
+                        'actions' => ['logout','index','error'],
                         'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
                     ],
                 ],
             ],

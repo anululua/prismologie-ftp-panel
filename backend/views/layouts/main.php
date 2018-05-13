@@ -44,27 +44,22 @@ AppAsset::register($this);
                             <li class="active">
                                 <?= Html::a('Users', ['//admin/user']) ?>
                             </li>
+                            <!--<li>
+    <?= Html::a('Roles', ['//admin/role']) ?>
+</li>
+<li>
+    <?= Html::a('Categories', ['//categories']) ?>
+</li>-->
                             <li>
-                                <?= Html::a('Roles', ['//admin/role']) ?>
+                                <?= Html::a('Folders', ['//folders']) ?>
                             </li>
-                            <li>
-                                <?= Html::a('Folders', ['//categories']) ?>
-                            </li>
-                            <li>
+                            <!--<li>
                                 <?= Html::a('Sub Folders', ['//subcategories']) ?>
                             </li>
                             <li>
                                 <?= Html::a('Upload Utility', ['//articles']) ?>
-                            </li>
-                            <!--<li>
-    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Categories</a>
-    <ul class="collapse list-unstyled" id="homeSubmenu">
-        <?= Html::a('Create Categories', ['//categories/create']) ?>
-            <li><a href="#">Events</a></li>
-            <li><a href="#">Films</a></li>
-            <li><a href="#">Jewellery</a></li>
-    </ul>
-</li>-->
+                            </li>-->
+
                         </ul>
                         <?php }?>
                 </nav>

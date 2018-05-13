@@ -42,7 +42,7 @@ return [
                 'yii\web\JqueryAsset' => [
                     'sourcePath' => null,   // do not publish the built in bundle
                     'js' => [
-                        'https://code.jquery.com/jquery-1.12.0.min.js',
+                        'https://code.jquery.com/jquery-1.12.4.js',
                     ]
                 ],
             ],
