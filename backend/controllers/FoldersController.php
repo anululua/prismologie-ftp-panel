@@ -39,40 +39,21 @@ class FoldersController extends Controller
     }
 
 
-    
-    public function actionPopup()
-{
-		
-	$this->renderPartial('view',array('data'=>'Ur-data'),false,true);
-		
-}
     public function actionView($id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
-
+    
 
     public function actionCreate()
     {
-        $model = new Categories();
-
-        if ($model->load(Yii::$app->request->post())) {
-            
-            $categoryName = Yii::$app->request->post('Categories')['name'];
-            $path = Yii::getAlias('@backend') . "/web/uploads/". $categoryName;
-            
-            if (FileHelper::createDirectory($path, $mode = 0777)) {
-                if($model->save()){
-                return $this->redirect(['view', 'id' => $model->id]);
-                }
-            }
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        
+        $folder_name = Yii::$app->request->post('folder_name');
+        $path = Yii::getAlias('@backend') . "/../uploads/". $folder_name;
+        FileHelper::createDirectory($path, $mode = 0777);
+            return 1;
     }
 
 

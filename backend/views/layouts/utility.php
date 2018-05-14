@@ -2,8 +2,13 @@
 
 use mdm\admin\models\User;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use yii\jui\Dialog;
+use yii\web\JsExpression;
+use yii\helpers\Url;
+
+
+
 
 ?>
 
@@ -15,42 +20,48 @@ use yii\helpers\ArrayHelper;
 
         ?>
             <p>
-                <?= Html::a('Create Folders', ['create'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a('Create Folder','#',array(
+        'onclick'=>'$("#folderdialog").dialog("open");','class'=>'btn btn-success',)); ?>
 
                     <?= Html::a('Upload Files', ['upload'], ['class' => 'btn btn-success']) ?>
             </p>
             <div class="assigment-form">
-
                 <?php
-                
                 echo Html::dropDownList('user_list', null,$listData,['prompt' => '--- select user ---','class'=>''], array('label' => 'Users'));
                 
                 echo Html::checkboxList('postIds', null, array('1'=>'Create Folder','2'=>'Download Files','3'=>'Upload Files'), ['class' => 'checkbox post-type-menu-item pull-right', 'separator' => ' ']);
-
                 ?>
             </div>
+
             <?php
+        
+            Dialog::begin([
+            'id'=>'folderdialog',
+            'clientOptions' => [
+            'modal' => true,
+            'title'=>"Add new folder",
+            'autoOpen'=>false,
+            'dialogClass'=>'no-close',
+            'buttons'=> [ 
+                [ 
+                    'text'=>Yii::t('app', 'cancel'), 
+                    'class'=>'btn btn-sm btn-success', 
+                    'click'=>new JsExpression(' function() { 
+                    $( this ).dialog( "close" ); 
+                    }') 
+                ],
+            ],
+          ],
+        ]); 
+        
+        echo '<div class="dialog_input"><input type="text" id="folder_name" name ="folder_name"/></div>';
 
- $this->beginWidget('zii.widgets.jui.CJuiDialog',array(
-    'id'=>'mydialog',
-    // additional javascript options for the dialog plugin
-    'options'=>array(
-        'title'=>'Dialog box 1',
-        'autoOpen'=>false,
-    ),
-));
+        
+        echo '<button type="submit" id="submitReset" class="btn-sm btn-success">Add</button>';
 
-    echo 'dialog content here';
+        Dialog::end();
+ 
+        
 
-$this->endWidget('zii.widgets.jui.CJuiDialog');
-
-// the link that may open the dialog
-echo CHtml::link('open dialog', '#', array(
-   'onclick'=>'$("#mydialog").dialog("open"); return false;',
-));
-?>
-                <div id="simple-div"></div>
-
-
-
+        ?>
     </div>
