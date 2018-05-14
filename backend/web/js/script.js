@@ -16,6 +16,11 @@ $(document).ready(function () {
             },
             success: function (data) {
                 alert(data);
+                /*if (data.error) {
+    alert(data.error);
+} else if (data.success) {
+    alert(data.success);
+}*/
 
             }
         });

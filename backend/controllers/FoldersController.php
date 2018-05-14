@@ -49,26 +49,11 @@ class FoldersController extends Controller
 
     public function actionCreate()
     {
-
-        return Yii::$app->request->post('folder_name');
         
-        exit;
-
-        if ($model->load(Yii::$app->request->post())) {
-            
-            $categoryName = Yii::$app->request->post('Categories')['name'];
-            $path = Yii::getAlias('@backend') . "/web/uploads/". $categoryName;
-            
-            if (FileHelper::createDirectory($path, $mode = 0777)) {
-                if($model->save()){
-                return $this->redirect(['view', 'id' => $model->id]);
-                }
-            }
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        $folder_name = Yii::$app->request->post('folder_name');
+        $path = Yii::getAlias('@backend') . "/../uploads/". $folder_name;
+        FileHelper::createDirectory($path, $mode = 0777);
+            return 1;
     }
 
 
