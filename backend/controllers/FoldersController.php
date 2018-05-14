@@ -39,24 +39,20 @@ class FoldersController extends Controller
     }
 
 
-    
-    public function actionPopup()
-{
-		
-	$this->renderPartial('view',array('data'=>'Ur-data'),false,true);
-		
-}
     public function actionView($id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
-
+    
 
     public function actionCreate()
     {
-        $model = new Categories();
+
+        return Yii::$app->request->post('folder_name');
+        
+        exit;
 
         if ($model->load(Yii::$app->request->post())) {
             
