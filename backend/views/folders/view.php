@@ -1,47 +1,45 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\Categories */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Folders', 'url' => ['index']];
+$this->title = 'Folders';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-    <div class="folders-view">
+    <div class="folders-index">
 
         <h1>
             <?= Html::encode($this->title) ?>
         </h1>
 
-        <p>
-            <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-        </p>
+        <div class="col-md-5">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
 
-        <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            //'id',
-            'name',
-            [ 
-                'attribute' => 'status', 
-                'value' => function($model) 
-                { 
-                    return $model->status == 0 ? 'Inactive' : 'Active'; 
-                }, 
-            ],
-            'created_at:date',
-            'updated_at:date',
-        ],
-    ]) ?>
+                <?php foreach ($dataProvider as $data): ?>
+                <tr>
+                    <td>
+                        <?php echo Html::a($data); ?>
+                    </td>
+                    <td>
+                        <?= Html::a('<i class="glyphicon glyphicon-eye-open"></i>',['view'], ['class' => 'btn btn-black', 'title' => 'View']);?>
+                            <?= Html::a('<i class="glyphicon glyphicon-pencil"></i>',['edit'], ['class' => 'btn btn-black', 'title' => 'Edit']);?>
+                                <?= Html::a('<i class="glyphicon glyphicon-trash"></i>',['delete'], ['class' => 'btn btn-black', 'title' => 'Delete']); ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+        <div class="col-md-6 col-md-offset-1">
+
+            <?php echo $this->render('//layouts/utility');?>
+
+        </div>
 
     </div>

@@ -23,6 +23,7 @@ class FoldersController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'file-upload' => ['POST'],
                 ],
             ],
         ];
@@ -39,8 +40,10 @@ class FoldersController extends Controller
     }
 
 
-    public function actionView($id)
+    public function actionView($path)
     {
+      echo $path;
+      die();
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -52,8 +55,21 @@ class FoldersController extends Controller
         
         $folder_name = Yii::$app->request->post('folder_name');
         $path = Yii::getAlias('@backend') . "/../uploads/". $folder_name;
-        FileHelper::createDirectory($path, $mode = 0777);
-            return 1;
+        if(FileHelper::createDirectory($path, $mode = 0777))
+             return 1;
+           else
+             return false;
+    }
+  
+  public function actionFileUpload()
+    {
+      return Yii::$app->request->post('file_data');
+    die();
+      //$file_name = Yii::$app->request->post('folder_name');
+
+      $this->file->saveAs('uploads/' . Yii::$app->request->post());
+
+        return 1;
     }
 
 

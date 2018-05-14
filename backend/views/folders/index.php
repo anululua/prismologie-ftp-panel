@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php echo Html::a($data); ?>
                     </td>
                     <td>
-                        <?= Html::a('<i class="glyphicon glyphicon-eye-open"></i>',['view'], ['class' => 'btn btn-black', 'title' => 'View']);?>
+                        <?= Html::a('<i class="glyphicon glyphicon-eye-open"></i>',['view','path'=>$data], ['class' => 'btn btn-black', 'title' => 'View']);?>
                             <?= Html::a('<i class="glyphicon glyphicon-pencil"></i>',['edit'], ['class' => 'btn btn-black', 'title' => 'Edit']);?>
                                 <?= Html::a('<i class="glyphicon glyphicon-trash"></i>',['delete'], ['class' => 'btn btn-black', 'title' => 'Delete']); ?>
                     </td>
