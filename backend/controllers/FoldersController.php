@@ -110,35 +110,13 @@ class FoldersController extends Controller
     {
         
         $name = Yii::$app->request->post('name');
-        $old_name = Yii::$app->request->post('title');
+        $old_name = Yii::$app->request->post('old_title');
         $pathTrim = rtrim(Yii::$app->request->post('path'),'/');
-        //$path = $pathTrim . "/". $name;
-        
-        if(rename($pathTrim.$old_name,$old_name.$name))
+        $path = $pathTrim . "/";
+        if(rename($path.$old_name,$path.$name))
             return 1;
         else
             return 0;
-
-        /*$model = $this->findModel($id);
-        $categoryOld= $model->name;
-        if ($model->load(Yii::$app->request->post())) {
-            
-            $src = Yii::getAlias('@backend') . "/web/uploads/". $categoryOld;
-            
-            $categoryNew = Yii::$app->request->post('Categories')['name'];
-            $dest = Yii::getAlias('@backend') . "/web/uploads/". $categoryNew;
-            FileHelper::createDirectory($dest, $mode = 0777);
-                
-            FileHelper::copyDirectory($src,$dest);
-                if($model->save()){
-                    FileHelper::removeDirectory($src);
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);*/
     }
 
 

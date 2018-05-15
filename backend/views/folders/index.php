@@ -11,70 +11,72 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 ?>
-    <div class="folders-index">
+  <div class="folders-index">
 
-        <h1>
-            <?= Html::encode($this->title) ?>
-        </h1>
+    <h1>
+      <?= Html::encode($this->title) ?>
+    </h1>
 
-        <div class="col-md-9">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Options</th>
-                        <th>Assignments</th>
-                    </tr>
-                </thead>
+    <div class="col-md-9">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Options</th>
+            <th>Assignments</th>
+          </tr>
+        </thead>
 
-                <?php foreach ($dataProvider as $data): ?>
-                <tr>
-                    <td>
-                        <?php echo Html::a($data); ?>
-                    </td>
-                    <td>
-                        <?php if(is_dir($path.$data)){
+        <?php foreach ($dataProvider as $data): ?>
+        <tr>
+          <td>
+            <?php echo Html::a($data); ?>
+          </td>
+          <td>
+            <?php if(is_dir($path.$data)){
     
     echo Html::a('<i class="glyphicon glyphicon-eye-open"></i>',['view','path'=>$path.$data.'/'], ['class' => 'btn btn-black', 'title' => 'View']);
 }else{
     
     echo Html::a('<i class="glyphicon glyphicon-download-alt"></i>',['download','path'=>$path.$data], ['class' => 'btn btn-black', 'title' => 'Download']);
 }
-         
-    echo Html::a('<i class="glyphicon glyphicon-pencil"></i>','#',['class'=>'btn btn-black','title' => 'Edit','id'=>'edit_title', 'title_name'=>$data,]);                    
-                        
+                                             
     echo Html::a('<i class="glyphicon glyphicon-trash"></i>',['delete','path'=>$path.$data.'/'], ['class' => 'btn btn-black', 'title' => 'Delete']);
       
 ?>
-                    </td>
-                    <td>
-                        <?php echo $this->render('//layouts/assignments');?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </table>
-        </div>
-        <?php echo $this->render('//layouts/utility',['path'=>$path]);?>
-
+            <a title="Edit" data-toggle="modal" class="open-dialog btn" data-target="#SettingsModal" data-title="<?=$data;?>" data-path="<?=$path;?>">
+              <i class="glyphicon glyphicon-pencil"></i>
+            </a>
+          </td>
+          <td>
+            <?php echo $this->render('//layouts/assignments');?>
+          </td>
+        </tr>
+        <?php endforeach; ?>
+      </table>
     </div>
+    <?php echo $this->render('//layouts/utility',['path'=>$path]);?>
 
-    <?php
-        
-            Dialog::begin([
-            'id'=>'editdialog',
-            'clientOptions' => [
-            'modal' => true,
-            'title'=>"New name",
-            'autoOpen'=>false,
-            'dialogClass'=>'no-close',
-          ],
-        ]); 
-        
-        echo '<div class="dialog_input"><input type="text" id="name" name ="name required"/></div>';
-        echo '<input type="hidden" readonly id="path" name ="path" value ='.$path.'/>';
-        echo '<input type="hidden" id="title" name ="title" value = ""/>';
-        echo '</br>';
-        echo '<button type="submit" id="edit_name" class="btn btn-success">Add</button>';
-        echo '<button type="reset" id="reset" class="btn btn-success pull-right">Cancel</button>';
+  </div>
 
-      Dialog::end(); ?>
+  <div class="modal fade" id="SettingsModal" tabindex="-1" role="dialog" aria-labelledby="SettingsModalLabel">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+                  <span aria-hidden="true">&times;</span>
+                </button>
+          <h4 class="modal-title">Add new name</h4>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" value="" id="path" name="path" readonly/>
+          <input type="hidden" value="" id="old_title" name="old_title" readonly/>
+          <input type="text" id="name" required />
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="edit_name" class="btn btn-success pull-left">Add</button>
+          <button type="reset" class="btn btn-success" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
