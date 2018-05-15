@@ -22,60 +22,104 @@ class FoldersController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
-                    'file-upload' => ['POST'],
+                    //'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
 
+    // folder listing
     public function actionIndex()
-    {        
+    {     
+        
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $dataProvider = array_slice(scandir($path), 2);
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'path'=>$path,
         ]);
     }
 
-
+    
+    //dynamic folder view
     public function actionView($path)
     {
-      echo $path;
-      die();
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+
+        if(is_dir($path)){
+            $list = scandir($path);
+            $dataProvider = array_slice(scandir($path), 2);
+            if($dataProvider){
+                return $this->render('view', [
+                'dataProvider' => $dataProvider,
+                'path'=>$path,
+            ]);
+          }else{
+            return $this->render('empty', [
+            'path'=>$path,
         ]);
+        }
+        }else{
+            return $this->render('empty', [
+            'path'=>$path,
+        ]);
+        }
     }
     
-
+    
+    // folder creation
     public function actionCreate()
     {
         
         $folder_name = Yii::$app->request->post('folder_name');
-        $path = Yii::getAlias('@backend') . "/../uploads/". $folder_name;
+        $pathTrim = rtrim(Yii::$app->request->post('folder_path'),'/');
+        $path = $pathTrim . "/". $folder_name;
         if(FileHelper::createDirectory($path, $mode = 0777))
-             return 1;
+             return $path;
            else
-             return false;
+             return 0;
     }
   
-  public function actionFileUpload()
+    
+    // file upload
+    public function actionFileUpload()
     {
-      return Yii::$app->request->post('file_data');
-    die();
-      //$file_name = Yii::$app->request->post('folder_name');
 
-      $this->file->saveAs('uploads/' . Yii::$app->request->post());
-
-        return 1;
+          $filename = $_FILES['file']['name'];
+          $path = $_POST['file_path'];
+          $location = $path.$filename;
+          if(move_uploaded_file($_FILES['file']['tmp_name'],$location))
+              return 1;
+          else
+              return 0;
     }
 
+    
+    // download files    
+    public function actionDownload($path) 
+    { 
 
-    public function actionUpdate($id)
+        if (file_exists($path)) {
+            return Yii::$app->response->sendFile($path);
+        }
+    }
+    
+    
+    //rename folders or files
+    public function actionEdit()
     {
-        $model = $this->findModel($id);
+        
+        $name = Yii::$app->request->post('name');
+        $old_name = Yii::$app->request->post('title');
+        $pathTrim = rtrim(Yii::$app->request->post('path'),'/');
+        //$path = $pathTrim . "/". $name;
+        
+        if(rename($pathTrim.$old_name,$old_name.$name))
+            return 1;
+        else
+            return 0;
+
+        /*$model = $this->findModel($id);
         $categoryOld= $model->name;
         if ($model->load(Yii::$app->request->post())) {
             
@@ -94,27 +138,21 @@ class FoldersController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-        ]);
+        ]);*/
     }
 
 
-    public function actionDelete($id)
+    //delete folders or files
+    public function actionDelete($path)
     {
-        $categoryName= $this->findModel($id)->name;
-        $path = Yii::getAlias('@backend') . "/web/uploads/". $categoryName;
-        FileHelper::removeDirectory($path);
+        if(is_dir($path))
+            FileHelper::removeDirectory($path);
+        else
+            unlink(rtrim($path,'/'));
 
-        $this->findModel($id)->delete();
+        return $this->redirect(Yii::$app->request->referrer);
 
-        return $this->redirect(['index']);
     }
 
-    protected function findModel($id)
-    {
-        if (($model = Categories::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+    
 }

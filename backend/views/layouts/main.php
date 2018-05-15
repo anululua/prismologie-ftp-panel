@@ -82,16 +82,8 @@ AppAsset::register($this);
                             </div>
                             <?php }?>
                     </nav>
-
-
-                    <?php
-                    if (!Yii::$app->user->isGuest){?>
-                        <div class="row">
-                            <?= Breadcrumbs::widget([ 'homeLink' => [ 'label' => Yii::t('yii', 'Home'), 'url' => Yii::$app->homeUrl, ], 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]);?>
-                        </div>
-                        <?php }?>
-                        <?= Alert::widget() ?>
-                            <?= $content ?>
+                    <?= Alert::widget(); ?>
+                        <?= $content; ?>
 
                 </div>
 
