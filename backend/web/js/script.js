@@ -17,7 +17,6 @@ $(document).ready(function () {
     });
 
     $('#edit_title').click(function () {
-        alert(23);
         var title_name = $(this).attr('title_name');
         $("#editdialog").find("#title").val(title_name);
         $("#editdialog").dialog("open");
@@ -96,7 +95,7 @@ $(document).ready(function () {
             }
         });
 
-        //return false;
+        return false;
 
     });
 
