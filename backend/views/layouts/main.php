@@ -42,23 +42,15 @@ AppAsset::register($this);
                     if (!Yii::$app->user->isGuest){?>
                         <ul class="list-unstyled components">
                             <li class="active">
-                                <?= Html::a('Users', ['//admin/user']) ?>
-                            </li>
-                            <!--<li>
-    <?= Html::a('Roles', ['//admin/role']) ?>
-</li>
-<li>
-    <?= Html::a('Categories', ['//categories']) ?>
-</li>-->
-                            <li>
                                 <?= Html::a('Folders', ['//folders']) ?>
                             </li>
-                            <!--<li>
-                                <?= Html::a('Sub Folders', ['//subcategories']) ?>
-                            </li>
                             <li>
-                                <?= Html::a('Upload Utility', ['//articles']) ?>
-                            </li>-->
+                                <?php 
+                                $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
+                                if($userRole === 'admin')     
+                                    echo Html::a('Users', ['//admin/user']);
+                                ?>
+                            </li>
 
                         </ul>
                         <?php }?>

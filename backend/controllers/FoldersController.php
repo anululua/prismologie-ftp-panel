@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use yii\helpers\FileHelper;
 use yii\helpers\Url;
 /**
@@ -18,11 +18,29 @@ class FoldersController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    //'delete' => ['POST'],
+       return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['logout','index','error'],
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['logout','index','error','download','view','create','file-upload','edit','delete'],
+                        'roles' => ['moderator'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['logout','index','error','download','view'],
+                        'roles' => ['public'],
+                    ],
                 ],
             ],
         ];
@@ -33,8 +51,14 @@ class FoldersController extends Controller
     public function actionIndex()
     {     
         
+        $roles = Yii::$app->authmanager->getRoles(); 
+                
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $dataProvider = array_slice(scandir($path), 2);
+        
+        //$userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
+        
+        
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'path'=>$path,
@@ -45,7 +69,7 @@ class FoldersController extends Controller
     //dynamic folder view
     public function actionView($path)
     {
-
+       /* if (Yii::$app->user->can('downloadFiles')){ echo 'permission granted'; } else{ echo 'no permission'; } exit;*/
         if(is_dir($path)){
             $list = scandir($path);
             $dataProvider = array_slice(scandir($path), 2);
@@ -108,15 +132,24 @@ class FoldersController extends Controller
     //rename folders or files
     public function actionEdit()
     {
-        
         $name = Yii::$app->request->post('name');
         $old_name = Yii::$app->request->post('old_title');
         $pathTrim = rtrim(Yii::$app->request->post('path'),'/');
         $path = $pathTrim . "/";
-        if(rename($path.$old_name,$path.$name))
-            return 1;
-        else
-            return 0;
+        
+        if(is_file($path.$old_name)){
+            $extension = pathinfo($path.$old_name, PATHINFO_EXTENSION);
+            if(rename($path.$old_name,$path.$name.'.'.$extension))
+                return 1;
+            else
+                return 0;
+        }else{
+            if(rename($path.$old_name,$path.$name))
+                return 1;
+            else
+                return 0;
+        }
+        
     }
 
 

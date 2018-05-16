@@ -9,6 +9,8 @@ use yii\web\IdentityInterface;
  * User model
  *
  * @property integer $id
+ * @property string $fname
+ * @property string $lname
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
@@ -50,6 +52,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
     }
+    
     /**
      * {@inheritdoc}
      */

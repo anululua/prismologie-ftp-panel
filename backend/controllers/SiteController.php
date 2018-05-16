@@ -3,7 +3,6 @@ namespace backend\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
@@ -26,7 +25,6 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                //'only' => ['login', 'logout','error'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -41,6 +39,11 @@ class SiteController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['admin'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['logout','index','error'],
+                        'roles' => ['moderator'],
                     ],
                 ],
             ],

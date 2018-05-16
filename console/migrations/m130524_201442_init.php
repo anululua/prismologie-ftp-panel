@@ -1,5 +1,6 @@
 <?php
 
+use Yii;
 use yii\db\Migration;
 
 class m130524_201442_init extends Migration
@@ -14,16 +15,35 @@ class m130524_201442_init extends Migration
 
         $this->createTable('{{%user}}', [
             'id' => $this->primaryKey(),
+            'fname' => $this->string(50)->notNull(),
+            'lname' => $this->string(50)->notNull(),
             'username' => $this->string()->notNull()->unique(),
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
-
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
+        
+        
+        /*username :wassim
+        email:
+        password:wassim123456*/
+            
+            
+        $this->insert('{{%user}}', [
+            'fname' => 'admin',
+            'lname' => 'admin',
+            'username' => 'admin',
+            'auth_key' =>Yii::$app->security->generateRandomString(),
+            'password_hash'=>Yii::$app->security->generatePasswordHash('wassim123456'),
+            'email'=>'wassim.safi@lulua.com ',
+            'status'=>'10',
+            'created_at'=>'1525351921',
+            'updated_at'=>'1525351921'
+        ]);
     }
 
     public function down()

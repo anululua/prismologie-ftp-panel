@@ -5,7 +5,8 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 
-$users=User::find()->all();
+$users = User::find()->where('id != 1')->all();
+
 $listData=ArrayHelper::map($users,'id','username');
 
 ?>
