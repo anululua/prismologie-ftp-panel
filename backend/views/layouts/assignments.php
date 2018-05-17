@@ -18,6 +18,7 @@ echo Html::dropDownList('user_list', null,$listData,['prompt' => '--- select use
 
 //echo Html::checkboxList('postIds', null, array('1'=>'Manage Utilities','2'=>'Public Access',), ['class' => 'checkbox-inline', 'separator' => '']);
         
+        
         ?>
 
         <label class="checkbox-inline"><input type="checkbox" value="1" name="postIds[]">Manage Utilities</label>
