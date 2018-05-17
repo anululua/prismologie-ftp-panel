@@ -20,9 +20,9 @@ class AssignmentController extends Controller
     public $userClassName;
     public $idField = 'id';
     public $usernameField = 'username';
-    public $fullnameField;
     public $searchClass;
     public $extraColumns = ['fname','lname'];
+    public $fullnameField ;
 
     /**
      * @inheritdoc
@@ -68,7 +68,6 @@ class AssignmentController extends Controller
             $searchModel = new $class;
             $dataProvider = $searchModel->search(Yii::$app->getRequest()->getQueryParams());
         }
-
         return $this->render('index', [
                 'dataProvider' => $dataProvider,
                 'searchModel' => $searchModel,
@@ -91,7 +90,6 @@ class AssignmentController extends Controller
                 'model' => $model,
                 'idField' => $this->idField,
                 'usernameField' => $this->usernameField,
-                'fullnameField' => $this->fullnameField,
         ]);
     }
 

@@ -11,15 +11,14 @@ use yii\web\YiiAsset;
 /* @var $fullnameField string */
 
 $userName = $model->{$usernameField};
-if (!empty($fullnameField)) {
-    $userName .= ' (' . ArrayHelper::getValue($model, $fullnameField) . ')';
+
+if (!empty($fullnameField)) { 
+    $userName .= ' (' . ArrayHelper::getValue($model, $fullnameField) . ')'; 
 }
 $userName = Html::encode($userName);
 
 $this->title = Yii::t('rbac-admin', 'Assignment') . ' : ' . $userName;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac-admin', 'Assignments'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $userName;
 
 AnimateAsset::register($this);
 YiiAsset::register($this);
@@ -41,6 +40,8 @@ $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate
                 <select multiple size="20" class="form-control list" data-target="available">
             </select>
             </div>
+
+
             <div class="col-sm-1">
                 <br><br>
                 <?=Html::a('&gt;&gt;' . $animateIcon, ['assign', 'id' => (string) $model->id], [

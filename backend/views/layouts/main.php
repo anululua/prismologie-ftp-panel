@@ -44,14 +44,19 @@ AppAsset::register($this);
                             <li class="active">
                                 <?= Html::a('Folders', ['//folders']) ?>
                             </li>
+                            <?php 
+                            $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
+                            if($userRole === 'admin') { ?>
                             <li>
-                                <?php 
-                                $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
-                                if($userRole === 'admin')     
-                                    echo Html::a('Users', ['//admin/user']);
-                                ?>
+                                <?= Html::a('Users', ['//admin/user']);?>
                             </li>
-
+                            <li>
+                                <?= Html::a('Roles', ['//admin/role']) ?>
+                            </li>
+                            <li>
+                                <?= Html::a('Assignments', ['//admin/assignment']) ?>
+                            </li>
+                            <?php }?>
                         </ul>
                         <?php }?>
                 </nav>

@@ -13,14 +13,10 @@ class m180506_090817_init_rbac extends Migration
     public function safeUp()
     {
         $auth = Yii::$app->authManager;
-
-        $viewUtilities = $auth->createPermission('viewUtilities');
-        $viewUtilities->description = 'View files and folders';
-        $auth->add($viewUtilities);
         
-        $downloadUtilities = $auth->createPermission('downloadUtilities');
-        $downloadUtilities->description = 'Download files';
-        $auth->add($downloadUtilities);
+        $publicAccessUtilities = $auth->createPermission('publicAccessUtilities');
+        $publicAccessUtilities->description = 'Download and view files for the public';
+        $auth->add($publicAccessUtilities);
         
         $manageUtilities = $auth->createPermission('manageUtilities');  //add, edit, delete utilities
         $manageUtilities->description = 'Manage utilities';
@@ -37,8 +33,7 @@ class m180506_090817_init_rbac extends Migration
         $public = $auth->createRole('public');
         $public->description = 'General Public canonly view or download utilities';
         $auth->add($public);
-        $auth->addChild($public,$viewUtilities);
-        $auth->addChild($public,$downloadUtilities);
+        $auth->addChild($public,$publicAccessUtilities);
         
         $moderator = $auth->createRole('moderator');
         $moderator->description = 'Moderator has limited permission to acces manage folders and utilities';

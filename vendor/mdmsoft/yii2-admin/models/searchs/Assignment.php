@@ -16,6 +16,8 @@ class Assignment extends Model
 {
     public $id;
     public $username;
+    public $fname;
+    public $lname;
 
     /**
      * @inheritdoc
@@ -23,7 +25,7 @@ class Assignment extends Model
     public function rules()
     {
         return [
-            [['id', 'username'], 'safe'],
+            [['id', 'username','fname','lname'], 'safe'],
         ];
     }
 
@@ -36,6 +38,8 @@ class Assignment extends Model
             'id' => Yii::t('rbac-admin', 'ID'),
             'username' => Yii::t('rbac-admin', 'Username'),
             'name' => Yii::t('rbac-admin', 'Name'),
+            'fname' => Yii::t('rbac-admin', 'First Name'),
+            'lname' => Yii::t('rbac-admin', 'Last Name'),
         ];
     }
 

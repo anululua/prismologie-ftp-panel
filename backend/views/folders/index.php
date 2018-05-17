@@ -18,6 +18,14 @@ $this->params['breadcrumbs'][] = $this->title;
         </h1>
         <div class="col-md-9">
             <table class="table table-striped">
+                <!--                <col width="10">
+                <col width="10">
+                <col width="200">-->
+                <colgroup>
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 70%;">
+                </colgroup>
                 <thead>
                     <tr>
                         <th>Name</th>
