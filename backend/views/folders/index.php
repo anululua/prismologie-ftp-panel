@@ -58,7 +58,7 @@ $listData=ArrayHelper::map($users,'id','username');
                     </td>
                     <td>
                         <form id="assignments" name="assignments[<?=$data;?>]" action="javascript:handleClick()">
-                            <?=Html::dropDownList('user_list', null,$listData,['prompt' => '--- select user ---','id'=>'user_list','name'=>'user_list[]'], array('label' => 'Users'));?>
+                            <?=Html::dropDownList('user_list', null,$listData,['prompt' => '--- select user ---','id'=>'user_list','name'=>'user_list'], array('label' => 'Users'));?>
                                 <input type="hidden" readonly value="<?=$path.$data;?>" />
                                 <span class="pull-right">
                             <label class="checkbox-inline" title="Add/Edit/Delete Utilities">
@@ -104,7 +104,7 @@ $listData=ArrayHelper::map($users,'id','username');
         function handleClick() {
             alert(23);
 
-            user_id = $("input[name='user_list[]']:").val();
+            user_id = $("input[name='user_list']:").val();
             if (user_id)
                 alert(user_id);
             else
