@@ -2,13 +2,16 @@
 
 use yii\helpers\Html;
 use yii\jui\Dialog;
+use mdm\admin\models\User;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 
 $this->title = 'Folders';
-$this->params['breadcrumbs'][] = $this->title;
 
+$users = User::find()->where('id !='.Yii::$app->user->getId())->all();
 
+$listData=ArrayHelper::map($users,'id','username');
 
 ?>
     <div class="folders-index">
@@ -17,14 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::encode($this->title) ?>
         </h1>
         <div class="col-md-9">
+
             <table class="table table-striped">
-                <!--                <col width="10">
-                <col width="10">
-                <col width="200">-->
                 <colgroup>
-                    <col span="1" style="width: 15%;">
-                    <col span="1" style="width: 15%;">
-                    <col span="1" style="width: 70%;">
+                    <col span="1" style="width: 20%;">
+                    <col span="1" style="width: 20%;">
+                    <col span="1" style="width: 60%;">
                 </colgroup>
                 <thead>
                     <tr>
@@ -56,7 +57,19 @@ $this->params['breadcrumbs'][] = $this->title;
             </a>
                     </td>
                     <td>
-                        <?php echo $this->render('//layouts/assignments');?>
+                        <form id="assignments" name="assignments[<?=$data;?>]" action="javascript:handleClick()">
+                            <?=Html::dropDownList('user_list', null,$listData,['prompt' => '--- select user ---','id'=>'user_list','name'=>'user_list[]'], array('label' => 'Users'));?>
+                                <input type="hidden" readonly value="<?=$path.$data;?>" />
+                                <span class="pull-right">
+                            <label class="checkbox-inline" title="Add/Edit/Delete Utilities">
+                                <input type="checkbox" value="1" id="chk" name = "chk[]">Manage Utilities
+                            </label>
+                            <label class="checkbox-inline" title="View/Download Utilities">
+                                <input type="checkbox" value="2" id="check" name="check[]" checked="checked">Public Access
+                            </label>
+                            <button type="submit" id="user_assignment" class="btn btn-default btn-xs">Save</button>
+                        </span>
+                        </form>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -87,3 +100,18 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
+    <script type="application/javascript">
+        function handleClick() {
+            alert(23);
+
+            user_id = $("input[name='user_list[]']:").val();
+            if (user_id)
+                alert(user_id);
+            else
+                alert('no user_id');
+            //return false;
+            event.preventDefault();
+
+        }
+
+    </script>
