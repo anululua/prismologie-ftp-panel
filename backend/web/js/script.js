@@ -124,7 +124,6 @@ $(document).ready(function () {
     event.preventDefault();
     user_id = $("#user_list").val();
 
-    alert('user_id' + user_id);
     if ($('#check').is(':checked'))
         public_access = true;
     else
@@ -152,29 +151,7 @@ $(document).ready(function () {
 
 
 
-    function ajaxUserAssignment(user_id, manage_utitlities, public_access) {
 
-        $.ajax({
-            url: '?r=folders/assignments',
-            type: 'POST',
-            data: {
-                user_id: user_id,
-                manage_utitlities: manage_utitlities,
-                public_access: public_access
-            },
-            success: function (data) {
-                //alert(data);
-                location.reload();
-                if (data) {
-
-                } else {
-
-                }
-            }
-        });
-
-        return false;
-    }
 
     /*$("#user_assignment").click(function () {
 
