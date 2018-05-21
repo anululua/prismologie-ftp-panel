@@ -40,8 +40,6 @@ $controllerId = $this->context->uniqueId . '/';
                     'method' => 'post',
                 ],
             ]);
-        }else{
-            echo 4444;
         }
         ?>
         </p>

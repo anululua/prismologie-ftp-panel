@@ -36,7 +36,7 @@ $listData=ArrayHelper::map($users,'id','username');
                 </thead>
 
                 <?php foreach ($dataProvider as $data): ?>
-                <tr>
+                <tr id="<?=$data;?>">
                     <td>
                         <?php echo Html::a($data); ?>
                     </td>
@@ -57,19 +57,20 @@ $listData=ArrayHelper::map($users,'id','username');
             </a>
                     </td>
                     <td>
-                        <form id="assignments" name="assignments[<?=$data;?>]" action="javascript:handleClick()">
-                            <?=Html::dropDownList('user_list', null,$listData,['prompt' => '--- select user ---','id'=>'user_list','name'=>'user_list'], array('label' => 'Users'));?>
-                                <input type="hidden" readonly value="<?=$path.$data;?>" />
-                                <span class="pull-right">
-                            <label class="checkbox-inline" title="Add/Edit/Delete Utilities">
-                                <input type="checkbox" value="1" id="chk" name = "chk[]">Manage Utilities
-                            </label>
-                            <label class="checkbox-inline" title="View/Download Utilities">
-                                <input type="checkbox" value="2" id="check" name="check[]" checked="checked">Public Access
-                            </label>
-                            <button type="submit" id="user_assignment" class="btn btn-default btn-xs">Save</button>
-                        </span>
-                        </form>
+
+                        <?=Html::dropDownList('user_list', null,$listData,['prompt' => '--- select user ---','id'=>'user_list','name'=>'user_list'], array('label' => 'Users'));?>
+
+
+<!--
+<input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />-->
+                            <input type="hidden" name="path" readonly value="<?=$path.$data;?>" />
+
+                            <input type="checkbox" title="Add/Edit/Delete Utilities" value="1" id="chk" name="chk" class="checkbox_check">Manage Utilities
+
+                            <input type="checkbox" title="View/Download Utilities" value="2" id="check" name="check" checked="checked">Public Access
+
+                            <button type="button" id="user_assignment" name="user_assignment" class="btn btn-default btn-xs" onclick="submitRowAsForm('<?=$data;?>')">Save</button>
+
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -100,18 +101,56 @@ $listData=ArrayHelper::map($users,'id','username');
             </div>
         </div>
     </div>
-    <script type="application/javascript">
-        function handleClick() {
-            alert(23);
 
-            user_id = $("input[name='user_list']:").val();
-            if (user_id)
-                alert(user_id);
-            else
-                alert('no user_id');
-            //return false;
+
+    <script>
+        function submitRowAsForm(idRow) {
+
+            //alert(yii.getCsrfToken());
+            form = document.createElement("form");
+            //form.method = "POST";
+            //form.action = "?r=folders/assignments";
+            user_id;
+            $("#" + idRow + " td").children().each(function() {
+                if (this.type.substring(0, 6) == "select") {
+                    input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = this.name;
+                    input.value = this.value;
+                    user_id = this.value;
+                    form.appendChild(input);
+                } /*else if (this.type.substring(0, 6) == "hidden") { if (this.name == '_csrf') { input = document.createElement("input"); input.type = "hidden"; input.name = this.name; input.value = yii.getCsrfToken(); form.appendChild(input); } else $(this).clone().appendTo(form); }*/
+                else {
+                    $(this).clone().appendTo(form);
+                }
+            });
+
+            //$(document.body).append(form);
+
+
+            $.ajax({
+                url: '?r=folders/assignments',
+                type: 'POST',
+                data: {
+                    user_id: 'user_id',
+                    manage_utitlities: 'manage_utitlities',
+                    public_access: 'public_access'
+                },
+                success: function(data) {
+                    alert(data);
+                    location.reload();
+                    if (data) {
+
+                    } else {
+
+                    }
+                }
+            });
+
+
+            //form.submit();
             event.preventDefault();
-
+            return false;
         }
 
     </script>

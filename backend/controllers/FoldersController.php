@@ -24,11 +24,6 @@ class FoldersController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['logout','index','error'],
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'allow' => true,
                         'roles' => ['admin'],
                     ],
                     [
@@ -55,10 +50,7 @@ class FoldersController extends Controller
                 
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $dataProvider = array_slice(scandir($path), 2);
-        
-        //$userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
-        
-        
+                
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'path'=>$path,
@@ -69,7 +61,7 @@ class FoldersController extends Controller
     //dynamic folder view
     public function actionView($path)
     {
-       /* if (Yii::$app->user->can('downloadFiles')){ echo 'permission granted'; } else{ echo 'no permission'; } exit;*/
+ /* if (Yii::$app->user->can('downloadFiles')){ echo 'permission granted'; } else{ echo 'no permission'; } exit;*/        
         if(is_dir($path)){
             $list = scandir($path);
             $dataProvider = array_slice(scandir($path), 2);
@@ -164,6 +156,26 @@ class FoldersController extends Controller
         return $this->redirect(Yii::$app->request->referrer);
 
     }
+    
 
+    //users given access to folders by admin
+    public function actionAssignments(){
+        
+        return  Yii::$app->request->post('user_id');
+
+        
+        /*$user_id = Yii::$app->request->post('user_id');
+        $manage_utitlities = Yii::$app->request->post('manage_utitlities');
+        $public_access = Yii::$app->request->post('public_access');*/
+
+            //return $this->render('empty', ['path'=>'$path']);
+//            return $manage_utitlities;
+//            return $public_access;
+    
+    }
+    
+    
+
+    
     
 }

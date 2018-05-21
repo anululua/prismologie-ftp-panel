@@ -34,7 +34,6 @@ $(document).ready(function () {
             return false;
         }
 
-
         $.ajax({
             url: '?r=folders/create',
             type: 'POST',
@@ -120,6 +119,92 @@ $(document).ready(function () {
     });
 
 
+    /*$("button[name='user_assignment']").click(function () {
+
+    event.preventDefault();
+    user_id = $("#user_list").val();
+
+    alert('user_id' + user_id);
+    if ($('#check').is(':checked'))
+        public_access = true;
+    else
+        public_access = null;
+
+    if ($('#chk').is(':checked'))
+        manage_utitlities = true;
+    else
+        manage_utitlities = null;
+
+    if (manage_utitlities) {
+        if (!user_id) {
+            $("#user_list").css({
+                "border": "1px solid red",
+                "background": "#FFCECE"
+            });
+            return false;
+        } else {
+            ajaxUserAssignment(user_id, manage_utitlities, public_access);
+        }
+    } else {
+        ajaxUserAssignment(user_id, manage_utitlities, public_access);
+    }
+});*/
+
+
+
+    function ajaxUserAssignment(user_id, manage_utitlities, public_access) {
+
+        $.ajax({
+            url: '?r=folders/assignments',
+            type: 'POST',
+            data: {
+                user_id: user_id,
+                manage_utitlities: manage_utitlities,
+                public_access: public_access
+            },
+            success: function (data) {
+                //alert(data);
+                location.reload();
+                if (data) {
+
+                } else {
+
+                }
+            }
+        });
+
+        return false;
+    }
+
+    /*$("#user_assignment").click(function () {
+
+    var form_data = $(this).serialize();
+
+    user_id = $("#user_list").val();
+
+    alert(user_id);
+
+    $.ajax({
+        url: '? r = folders / assignments',
+        type: 'POST',
+        cache: false,
+        async: false,
+        processData: false,
+        contentType: false,
+        // data: formData,
+        success: function (data) {
+            alert(data);
+            // location.reload();
+            if (data) {
+
+            } else {
+
+            }
+        }
+    });
+
+    return false;
+});*/
 
 
 });

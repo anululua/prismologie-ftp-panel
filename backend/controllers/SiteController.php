@@ -68,7 +68,7 @@ class SiteController extends Controller
      * @return string
      */
     public function actionIndex()
-    {
+    {        
         return $this->render('index');
     }
     
@@ -100,27 +100,22 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-                
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+            $this->userRole();
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
-
-            if($userRole === 'admin')
-                return $this->redirect(['admin']);
-            else if($userRole === 'moderator')
-                return $this->redirect(['moderator']);
-            else
-                return $this->redirect(['index']);
+        }else{
+            $model = new LoginForm();
+            if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                        $this->userRole();
         } else {
             $model->password = '';
             return $this->render('login', [
                 'model' => $model,
             ]);
         }
+        }
+
+
     }
 
     /**
@@ -202,5 +197,19 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
         return $this->redirect(['login']);
+    }
+    
+    
+    
+    protected function userRole(){
+        
+        $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
+        
+        if($userRole === 'admin')
+            return $this->redirect(['admin']);
+        else if($userRole === 'moderator')
+            return $this->redirect(['moderator']);
+        else
+            return $this->redirect(['index']);
     }
 }
