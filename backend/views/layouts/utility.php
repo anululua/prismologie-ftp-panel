@@ -7,7 +7,7 @@ use yii\helpers\Url;
 use yii\web\YiiAsset
 
 ?>
-    <div class="col-md-3 pull-right">
+    <div class="col-md-3 pull-right" id= "utility_creation">
         <?= Html::a('Create Folder','#',array(
         'onclick'=>'$("#folderdialog").dialog("open");','class'=>'btn btn-success')); ?>
 

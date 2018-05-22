@@ -1,5 +1,26 @@
 $(document).ready(function () {
 
+    current_user = $("#currentUser").val();
+
+    if (current_user == 'moderator') {
+        $('#utility_table th:nth-child(3)').hide();
+        $('#utility_table td:nth-child(3)').hide();
+    }
+    if (current_user == 'public') {
+        $("#utility_creation").css({
+            "display": "none"
+        });
+
+        $('#utility_table th:nth-child(3)').hide();
+        $('#utility_table td:nth-child(3)').hide();
+        $('#utility_table tr').find("a[id='del_utility']").css({
+            "display": "none"
+        });
+        $('#utility_table tr').find("a[id='edit_utility']").css({
+            "display": "none"
+        });
+    }
+
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
     })
@@ -117,71 +138,6 @@ $(document).ready(function () {
         $("#SettingsModal #path").val(path);
         $("#SettingsModal #old_title").val(old_title);
     });
-
-
-    /*$("button[name='user_assignment']").click(function () {
-
-    event.preventDefault();
-    user_id = $("#user_list").val();
-
-    if ($('#check').is(':checked'))
-        public_access = true;
-    else
-        public_access = null;
-
-    if ($('#chk').is(':checked'))
-        manage_utitlities = true;
-    else
-        manage_utitlities = null;
-
-    if (manage_utitlities) {
-        if (!user_id) {
-            $("#user_list").css({
-                "border": "1px solid red",
-                "background": "#FFCECE"
-            });
-            return false;
-        } else {
-            ajaxUserAssignment(user_id, manage_utitlities, public_access);
-        }
-    } else {
-        ajaxUserAssignment(user_id, manage_utitlities, public_access);
-    }
-});*/
-
-
-
-
-
-    /*$("#user_assignment").click(function () {
-
-    var form_data = $(this).serialize();
-
-    user_id = $("#user_list").val();
-
-    alert(user_id);
-
-    $.ajax({
-        url: '? r = folders / assignments',
-        type: 'POST',
-        cache: false,
-        async: false,
-        processData: false,
-        contentType: false,
-        // data: formData,
-        success: function (data) {
-            alert(data);
-            // location.reload();
-            if (data) {
-
-            } else {
-
-            }
-        }
-    });
-
-    return false;
-});*/
 
 
 });

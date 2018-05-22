@@ -8,6 +8,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 use yii\helpers\FileHelper;
 use yii\helpers\Url;
+use backend\models\Folders;
+
 /**
  * FoldersController implements the CRUD actions for Folders .
  */
@@ -51,10 +53,54 @@ class FoldersController extends Controller
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $dataProvider = array_slice(scandir($path), 2);
                 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'path'=>$path,
-        ]);
+        $user_id =Yii::$app->user->getId();
+        $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
+        
+        if($userRole == 'admin')
+        {
+            return $this->render('index', [
+                    'dataProvider' => $dataProvider,
+                    'path'=>$path,
+                ]);
+        }else
+        {
+            foreach ($dataProvider as &$value) {
+                $value = $path.$value;
+            }
+            unset($value);
+            
+            if($userRole == 'moderator')
+            {
+                $utilities = Folders::find()
+                ->select('utility_name')
+                ->where(['user_id' => $user_id])
+                ->asArray()
+                ->all();
+            }
+            else
+            {
+                $utilities = Folders::find()
+                ->select('utility_name')
+                ->where(['public_access' => 'true'])
+                ->asArray()
+                ->all();
+            }
+            
+            $utility_names = array_column($utilities, 'utility_name');
+            $result = array_intersect($dataProvider, $utility_names);
+
+            $newlist = array();
+            foreach ($result as $key => $value)
+            {                
+             $newlist[$key] = substr($value, strrpos($value, '/') + 1);;
+            }
+
+            return $this->render('index', [
+                'dataProvider' => $newlist,
+                'path'=>$path,
+            ]);
+        }
+
     }
 
     
@@ -161,20 +207,27 @@ class FoldersController extends Controller
     //users given access to folders by admin
     public function actionAssignments(){
         
-        return  Yii::$app->request->post('user_id');
-
+        $user_id = Yii::$app->request->post('user_id'); 
+        $manage_utitlities = Yii::$app->request->post('manage_utitlities'); 
+        $public_access = Yii::$app->request->post('public_access'); 
+        $utility_path = Yii::$app->request->post('utility_path');
+    
+        $model = new Folders();
         
-        /*$user_id = Yii::$app->request->post('user_id');
-        $manage_utitlities = Yii::$app->request->post('manage_utitlities');
-        $public_access = Yii::$app->request->post('public_access');*/
-
-            //return $this->render('empty', ['path'=>'$path']);
-//            return $manage_utitlities;
-//            return $public_access;
+        $model->user_id = $user_id;
+        $model->utility_name = $utility_path;
+        $model->manage_utilities =$manage_utitlities;
+        $model->public_access = $public_access;
+        
+        //return public_access;
+        if($model->save())
+            return 1;
+        else
+            return 0;
     
     }
     
-    
+
 
     
     

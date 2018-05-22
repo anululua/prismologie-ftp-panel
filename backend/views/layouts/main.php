@@ -32,6 +32,7 @@ AppAsset::register($this);
 
         <div class="container-fluid">
 
+
             <div class="row wrapper">
 
                 <nav id="sidebar">
@@ -39,13 +40,18 @@ AppAsset::register($this);
                         <h3>Prismologie</h3>
                     </div>
                     <?php
-                    if (!Yii::$app->user->isGuest){?>
+                    if (!Yii::$app->user->isGuest){
+                        
+                            $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
+
+                        ?>
+                        <input type="hidden" readonly value='<?=$userRole;?>' id="currentUser" name="currentUser" />
+
                         <ul class="list-unstyled components">
                             <li class="active">
                                 <?= Html::a('Folders', ['//folders']) ?>
                             </li>
                             <?php 
-                            $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
                             if($userRole === 'admin') { ?>
                             <li>
                                 <?= Html::a('Users', ['//admin/user']);?>

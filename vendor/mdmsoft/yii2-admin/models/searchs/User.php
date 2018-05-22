@@ -65,6 +65,7 @@ class User extends UserModel
             ->andFilterWhere(['like', 'lname', $this->lname])
             ->andFilterWhere(['like', 'email', $this->email]);
 
+  
         return $dataProvider;
     }
 }

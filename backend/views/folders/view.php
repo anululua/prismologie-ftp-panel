@@ -20,7 +20,7 @@ $listData=ArrayHelper::map($users,'id','username');
         </h1>
 
         <div class="col-md-9">
-            <table class="table table-striped">
+            <table class="table table-striped" name="utility_table" id="utility_table">
                 <colgroup>
                     <col span="1" style="width: 20%;">
                     <col span="1" style="width: 20%;">
@@ -45,8 +45,8 @@ $listData=ArrayHelper::map($users,'id','username');
 }else{
     echo Html::a('<i class="glyphicon glyphicon-download-alt"></i>',['download','path'=>$path.$data], ['class' => 'btn btn-black', 'title' => 'Download']);
 }
-    echo Html::a('<i class="glyphicon glyphicon-pencil"></i>',['edit','path'=>$path.$data.'/'], ['class' => 'btn btn-black', 'title' => 'Edit']);
-    echo Html::a('<i class="glyphicon glyphicon-trash"></i>',['delete','path'=>$path.$data.'/'], ['class' => 'btn btn-black', 'title' => 'Delete']);
+    echo Html::a('<i class="glyphicon glyphicon-pencil"></i>',['edit','path'=>$path.$data.'/'], ['class' => 'btn btn-black', 'title' => 'Edit','id'=>"edit_utility"]);
+    echo Html::a('<i class="glyphicon glyphicon-trash"></i>',['delete','path'=>$path.$data.'/'], ['class' => 'btn btn-black', 'title' => 'Delete','id' => 'del_utility']);
                         
 ?>
 
