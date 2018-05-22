@@ -43,21 +43,21 @@ AppAsset::register($this);
             if (!Yii::$app->user->isGuest){
               
               $user_id = Yii::$app->user->getId();
-              $userRole = \Yii::$app->authManager->getRolesByUser($user_id);
+              $role = \Yii::$app->authManager->getRolesByUser($user_id);
 
-              if(count($userRole)>0)
-                $role = array_keys($userRole)[0];
+              if(count($role)>0)
+                $userRole = array_keys($role)[0];
               else
-                $role='public';
+                $userRole='public';
                 ?>
-            <input type="hidden" readonly value='<?=$role;?>' id="currentUser" name="currentUser" />
+            <input type="hidden" readonly value='<?=$userRole;?>' id="currentUser" name="currentUser" />
 
             <ul class="list-unstyled components">
               <li class="active">
                 <?= Html::a('Folders', ['//folders']) ?>
               </li>
               <?php 
-                            if($userRole === 'admin') { ?>
+                  if($userRole === 'admin') { ?>
               <li>
                 <?= Html::a('Users', ['//admin/user']);?>
               </li>

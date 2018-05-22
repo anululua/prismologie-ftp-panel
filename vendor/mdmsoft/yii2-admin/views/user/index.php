@@ -99,6 +99,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                   ]
                 ],
+              [
+               'label' => 'Reset',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                return Html::a(Html::encode("Reset"),'?r=site/request-password-reset',['class'=>'btn btn-default']);
+                      },
+            ],
+          
             ],
         ]);
         ?>
