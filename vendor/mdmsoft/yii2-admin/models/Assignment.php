@@ -98,12 +98,13 @@ class Assignment extends Object
             }
         }
 
+
         $assigned = [];
         foreach ($manager->getAssignments($this->id) as $item) {
             $assigned[$item->roleName] = $available[$item->roleName];
             unset($available[$item->roleName]);
         }
-
+      
         return [
             'available' => $available,
             'assigned' => $assigned,

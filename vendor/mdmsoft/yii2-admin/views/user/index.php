@@ -11,15 +11,15 @@ use mdm\admin\components\Helper;
 $this->title = Yii::t('rbac-admin', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-    <div class="user-index">
+  <div class="user-index">
 
-        <h1>
-            <?= Html::encode($this->title) ?>
-        </h1>
-        <p>
-            <?= Html::a('Create Users', ['/site/signup'], ['class'=>'btn btn-success']) ?>
-        </p>
-        <?=
+    <h1>
+      <?= Html::encode($this->title) ?>
+    </h1>
+    <p>
+      <?= Html::a('Create Users', ['/site/signup'], ['class'=>'btn btn-success']) ?>
+    </p>
+    <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -43,6 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'username',
             'email:email',
+            [
+               'label' => 'Role',
+               'value' => function ($model) {
+                   return $model->UserRole($model->id);
+               }
+            ],
             [
                 'attribute' => 'status',
                 'value' => function($model) {
@@ -96,4 +102,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]);
         ?>
-    </div>
+  </div>

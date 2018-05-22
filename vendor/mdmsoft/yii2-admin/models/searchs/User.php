@@ -19,7 +19,7 @@ class User extends UserModel
     {
         return [
             [['id', 'status'], 'integer'],
-            [['fname','lname','username', 'email'], 'safe'],
+            [['fname','lname','username', 'email','id'], 'safe'],
         ];
     }
     

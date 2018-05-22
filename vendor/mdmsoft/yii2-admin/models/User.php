@@ -200,4 +200,16 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return Configs::userDb();
     }
+  
+    public function UserRole($user_id)
+    {
+        $userRole = \Yii::$app->authManager->getRolesByUser($user_id);
+      
+        if(count($userRole)>0)
+          $role = array_keys($userRole)[0];
+        else
+          $role='-';
+      
+        return $role;
+    }
 }

@@ -47,9 +47,7 @@ class FoldersController extends Controller
     // folder listing
     public function actionIndex()
     {     
-        
-        $roles = Yii::$app->authmanager->getRoles(); 
-                
+                        
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $dataProvider = array_slice(scandir($path), 2);
                 
@@ -64,10 +62,10 @@ class FoldersController extends Controller
                 ]);
         }else
         {
-            foreach ($dataProvider as &$value) {
+            foreach ($dataProvider as &$value) 
                 $value = $path.$value;
-            }
-            unset($value);
+
+          unset($value);
             
             if($userRole == 'moderator')
             {
@@ -91,9 +89,7 @@ class FoldersController extends Controller
 
             $newlist = array();
             foreach ($result as $key => $value)
-            {                
-             $newlist[$key] = substr($value, strrpos($value, '/') + 1);;
-            }
+              $newlist[$key] = substr($value, strrpos($value, '/') + 1);
 
             return $this->render('index', [
                 'dataProvider' => $newlist,
@@ -107,24 +103,78 @@ class FoldersController extends Controller
     //dynamic folder view
     public function actionView($path)
     {
- /* if (Yii::$app->user->can('downloadFiles')){ echo 'permission granted'; } else{ echo 'no permission'; } exit;*/        
-        if(is_dir($path)){
+      
+        if(is_dir($path))
+        {
             $list = scandir($path);
             $dataProvider = array_slice(scandir($path), 2);
-            if($dataProvider){
-                return $this->render('view', [
-                'dataProvider' => $dataProvider,
-                'path'=>$path,
-            ]);
-          }else{
-            return $this->render('empty', [
-            'path'=>$path,
-        ]);
+          
+            if($dataProvider)
+            {
+                  /*return $this->render('view', [
+                    'dataProvider' => $dataProvider,
+                    'path'=>$path,
+                ]);*/
+              
+              $user_id =Yii::$app->user->getId();
+              $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
+        
+              if($userRole == 'admin')
+              {
+                  return $this->render('view', [
+                          'dataProvider' => $dataProvider,
+                          'path'=>$path,
+                      ]);
+              }else
+              {
+                  foreach ($dataProvider as &$value) 
+                      $value = $path.$value;
+
+                unset($value);
+
+                  if($userRole == 'moderator')
+                  {
+                      $utilities = Folders::find()
+                      ->select('utility_name')
+                      ->where(['user_id' => $user_id])
+                      ->asArray()
+                      ->all();
+                  }
+                  else
+                  {
+                      $utilities = Folders::find()
+                      ->select('utility_name')
+                      ->where(['public_access' => 'true'])
+                      ->asArray()
+                      ->all();
+                  }
+
+                  $utility_names = array_column($utilities, 'utility_name');
+                  $result = array_intersect($dataProvider, $utility_names);
+
+                  $newlist = array();
+                  foreach ($result as $key => $value)
+                    $newlist[$key] = substr($value, strrpos($value, '/') + 1);
+
+                  return $this->render('view', [
+                      'dataProvider' => $newlist,
+                      'path'=>$path,
+                  ]);
+              }
+              
+            }
+            else
+            {
+                return $this->render('empty', [
+                  'path'=>$path,
+                ]);
+            }
         }
-        }else{
-            return $this->render('empty', [
-            'path'=>$path,
-        ]);
+        else
+        {
+              return $this->render('empty', [
+              'path'=>$path,
+            ]);
         }
     }
     
@@ -219,7 +269,6 @@ class FoldersController extends Controller
         $model->manage_utilities =$manage_utitlities;
         $model->public_access = $public_access;
         
-        //return public_access;
         if($model->save())
             return 1;
         else
