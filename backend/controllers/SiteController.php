@@ -8,6 +8,7 @@ use common\models\LoginForm;
 use backend\models\PasswordResetRequestForm;
 use backend\models\ResetPasswordForm;
 use backend\models\SignupForm;
+use backend\models\ChangePassword;
 
 
 /**
@@ -101,13 +102,11 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            //$this->userRole();
              return $this->redirect(['index']);
 
         }else{
             $model = new LoginForm();
             if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                //$this->userRole();
                  return $this->redirect(['index']);
         } else {
             $model->password = '';
@@ -131,7 +130,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 if (Yii::$app->getUser()) {
-                    $this->redirect(['//admin/user']);
+                    $this->redirect(['//admin/assignment']);
                 }
             }
         }
@@ -181,11 +180,29 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->session->setFlash('success', 'New password saved.');
 
-            return $this->goHome();
+            return $this->redirect(['index']);
         }
 
         return $this->render('resetPassword', [
             'model' => $model,
+        ]);
+    }
+    
+    
+    
+        /**
+     * Reset password
+     * @return string
+     */
+    public function actionChangePassword()
+    {
+        $model = new ChangePassword();
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('change-password', [
+                'model' => $model,
         ]);
     }
     
@@ -198,20 +215,9 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->redirect(['login']);
+        return $this->goHome();
+        //return $this->redirect(['login']);
     }
     
     
-    
-    protected function userRole(){
-        
-        $userRole = array_keys(yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))[0];
-        
-        if($userRole === 'admin')
-            return $this->redirect(['admin']);
-        else if($userRole === 'moderator')
-            return $this->redirect(['moderator']);
-        else
-            return $this->redirect(['index']);
-    }
 }

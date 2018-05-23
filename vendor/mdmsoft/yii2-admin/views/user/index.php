@@ -9,17 +9,16 @@ use mdm\admin\components\Helper;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('rbac-admin', 'Users');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-  <div class="user-index">
+    <div class="user-index">
 
-    <h1>
-      <?= Html::encode($this->title) ?>
-    </h1>
-    <p>
-      <?= Html::a('Create Users', ['/site/signup'], ['class'=>'btn btn-success']) ?>
-    </p>
-    <?=
+        <h1>
+            <?= Html::encode($this->title) ?>
+        </h1>
+        <p>
+            <?= Html::a('Create Users', ['/site/signup'], ['class'=>'btn btn-success']) ?>
+        </p>
+        <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -103,11 +102,17 @@ $this->params['breadcrumbs'][] = $this->title;
                'label' => 'Reset',
                'format' => 'raw',
                'value'=>function ($data) {
-                return Html::a(Html::encode("Reset"),'?r=site/request-password-reset',['class'=>'btn btn-default']);
+                return Html::a(Html::encode("Reset"),'?r=site/request-password-reset',['class'=>'btn btn-default','title'=>'Password reset']);
                       },
             ],
-          
+            [
+               'label' => 'Change',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                return Html::a(Html::encode("Change"),'?r=site/change-password',['class'=>'btn btn-default','title'=>'Password change']);
+                      },
+            ],
             ],
         ]);
         ?>
-  </div>
+    </div>

@@ -97,14 +97,24 @@ class Assignment extends Object
                 $available[$name] = 'permission';
             }
         }
-
-
+        
         $assigned = [];
         foreach ($manager->getAssignments($this->id) as $item) {
+
             $assigned[$item->roleName] = $available[$item->roleName];
             unset($available[$item->roleName]);
         }
-      
+        
+            foreach ($available as $key => $value){
+                if($value == 'permission')
+                    unset($available[$key]); 
+            }
+        
+            foreach ($assigned as $key => $value){
+                    if($value == 'permission')
+                        unset($assigned[$key]); 
+                }        
+        
         return [
             'available' => $available,
             'assigned' => $assigned,
