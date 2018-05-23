@@ -7,7 +7,7 @@ use yii\helpers\Url;
 use yii\web\YiiAsset
 
 ?>
-    <div class="col-md-3 pull-right" id= "utility_creation">
+    <div class="col-md-3 pull-right" id="utility_creation">
         <?= Html::a('Create Folder','#',array(
         'onclick'=>'$("#folderdialog").dialog("open");','class'=>'btn btn-success')); ?>
 
@@ -52,7 +52,7 @@ use yii\web\YiiAsset
                 <input type="hidden" readonly id="file_path" name="file_path" value="<?=$path;?>" />
                 <div class="form-group">
                     <label>File</label>
-                    <input class="form-control" name="file" id="fileUpload" type="file" required>
+                    <input class="form-control" name="file" id="fileUpload" type="file" required accept="file_extension|audio/*|video/*|image/*|media_type">
                 </div>
                 <div class="form-group">
                     <button type="submit" id="submit_files" class="btn btn-success">Add</button>

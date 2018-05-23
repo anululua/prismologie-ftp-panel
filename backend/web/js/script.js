@@ -145,11 +145,16 @@
             });
 
 
-            $("form#data").submit(function (event) {
+            $("#data").submit(function (e) {
 
                 event.preventDefault();
 
                 var formData = new FormData($(this)[0]);
+                //var file = $(".fileUpload").prop('files')[0];
+
+                /*var formdata = new FormData();
+                formdata.append("file_video", file);*/
+
 
                 $.ajax({
                     url: '?r=folders/file-upload',
@@ -159,7 +164,9 @@
                     processData: false,
                     contentType: false,
                     data: formData,
+                    //data: new FormData($(this)),
                     success: function (data) {
+                        //alert(data);
                         location.reload();
                         if (data) {} else {}
                     }

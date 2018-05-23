@@ -105,13 +105,7 @@ $this->title = Yii::t('rbac-admin', 'Users');
                 return Html::a(Html::encode("Reset"),'?r=site/request-password-reset',['class'=>'btn btn-default','title'=>'Password reset']);
                       },
             ],
-            [
-               'label' => 'Change',
-               'format' => 'raw',
-               'value'=>function ($data) {
-                return Html::a(Html::encode("Change"),'?r=site/change-password',['class'=>'btn btn-default','title'=>'Password change']);
-                      },
-            ],
+            /*[ 'label' => 'Change', 'format' => 'raw', 'value'=>function ($model) { return Html::a(Html::encode("Change"),'?r=site/change-password('.$model->id.')',['class'=>'btn btn-default','title'=>'Password change']); }, ],*/
             ],
         ]);
         ?>

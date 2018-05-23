@@ -194,10 +194,11 @@ class SiteController extends Controller
      * Reset password
      * @return string
      */
-    public function actionChangePassword()
+    public function actionChangePassword($user_id)
     {
+
         $model = new ChangePassword();
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->change($user_id)) {
             return $this->redirect(['index']);
         }
 

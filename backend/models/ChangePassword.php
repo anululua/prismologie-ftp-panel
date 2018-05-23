@@ -3,8 +3,8 @@
 namespace backend\models;
 
 use Yii;
-//use mdm\admin\models\User;
-use common\models\User;
+use mdm\admin\models\User;
+//use common\models\User;
 use yii\base\Model;
 
 /**
@@ -40,6 +40,8 @@ class ChangePassword extends Model
     {
         /* @var $user User */
         $user = Yii::$app->user->identity;
+        echo '<pre>';
+        print_r($user);
         if (!$user || !$user->validatePassword($this->oldPassword)) {
             $this->addError('oldPassword', 'Incorrect old password.');
         }
@@ -50,14 +52,15 @@ class ChangePassword extends Model
      *
      * @return User|null the saved model or null if saving fails
      */
-    public function change()
+    public function change($user_id)
     {
         if ($this->validate()) {
             /* @var $user User */
-            $user = Yii::$app->user->identity;
+            //$user = Yii::$app->user->identity;
+            $user = User::findOne(['id' => $user_id, 'status' => self::STATUS_ACTIVE]);
             $user->setPassword($this->newPassword);
             $user->generateAuthKey();
-            if ($user->save()) {
+            if ($user->update()) {
                 return true;
             }
         }
