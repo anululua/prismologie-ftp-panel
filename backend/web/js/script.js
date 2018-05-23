@@ -1,214 +1,215 @@
         function submitRowAsForm(idRow) {
 
-          var user_id, utility_path, public_access, manage_utitlities;
+            var user_id, utility_path, public_access, manage_utitlities;
 
-          $("#" + idRow + " td").children().each(function () {
+            $("#" + idRow + " td").children().each(function () {
 
-            if (this.type.substring(0, 6) == "select")
-              user_id = this.value;
-            if (this.type.substring(0, 6) == "hidden") {
+                if (this.type.substring(0, 6) == "select")
+                    user_id = this.value;
+                if (this.type.substring(0, 6) == "hidden") {
 
-              if (this.name == 'path') {
-                utility_path = this.value;
-              }
-            }
-            if (this.type.substring(0, 8) == "checkbox") {
-
-              if (this.name == 'chk') {
-
-                if ($(this).prop('checked')) {
-
-                  manage_utitlities = true;
-
-                  if (!user_id) {
-                    $("#user_list").css({
-                      "border": "1px solid red",
-                      "background": "#FFCECE"
-                    });
-                    return false;
-                  } else {
-                    public_access = $("#" + idRow + " td input[name=check]").prop('checked');
-                    ajaxUserAssignment(user_id, manage_utitlities, public_access, utility_path);
-                  }
-                } else {
-                  manage_utitlities = false;
-                  public_access = $("#" + idRow + " td input[name=check]").prop('checked');
-                  ajaxUserAssignment(user_id, manage_utitlities, public_access, utility_path);
+                    if (this.name == 'path') {
+                        utility_path = this.value;
+                    }
                 }
-              }
-            }
-            event.preventDefault();
-          });
+                if (this.type.substring(0, 8) == "checkbox") {
+
+                    if (this.name == 'chk') {
+
+                        if ($(this).prop('checked')) {
+
+                            manage_utitlities = true;
+
+                            if (!user_id) {
+                                $("#user_list").css({
+                                    "border": "1px solid red",
+                                    "background": "#FFCECE"
+                                });
+                                return false;
+                            } else {
+                                public_access = $("#" + idRow + " td input[name=check]").prop('checked');
+                                ajaxUserAssignment(user_id, manage_utitlities, public_access, utility_path);
+                            }
+                        } else {
+                            manage_utitlities = false;
+                            public_access = $("#" + idRow + " td input[name=check]").prop('checked');
+                            ajaxUserAssignment(null, manage_utitlities, public_access, utility_path);
+                        }
+                    }
+                }
+                event.preventDefault();
+            });
 
         }
 
         function ajaxUserAssignment(user_id, manage_utitlities, public_access, utility_path) {
 
-          $.ajax({
-            url: '?r=folders/assignments',
-            type: 'POST',
-            data: {
-              user_id: user_id,
-              manage_utitlities: manage_utitlities,
-              public_access: public_access,
-              utility_path: utility_path,
-            },
-            success: function (data) {
-              location.reload();
-              if (data) {
+            $.ajax({
+                url: '?r=folders/assignments',
+                type: 'POST',
+                data: {
+                    user_id: user_id,
+                    manage_utitlities: manage_utitlities,
+                    public_access: public_access,
+                    utility_path: utility_path,
+                },
+                success: function (data) {
+                    location.reload();
+                    //alert(data);
+                    if (data) {
 
-              } else {
-                console.log(data)
-              }
-            },
-            error: function (data) {
-              console.log(data)
-            }
-          });
+                    } else {
+                        console.log(data)
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
 
-          return false;
+            return false;
         }
 
         $(document).ready(function () {
 
-          current_user = $("#currentUser").val();
+            current_user = $("#currentUser").val();
 
-          if (current_user == 'moderator') {
-            $('#utility_table th:nth-child(3)').hide();
-            $('#utility_table td:nth-child(3)').hide();
-          }
-          if (current_user == 'public') {
-            $("#utility_creation").css({
-              "display": "none"
-            });
+            if (current_user == 'moderator') {
+                $('#utility_table th:nth-child(3)').hide();
+                $('#utility_table td:nth-child(3)').hide();
+            }
+            if (current_user == 'public') {
+                $("#utility_creation").css({
+                    "display": "none"
+                });
 
-            $('#utility_table th:nth-child(3)').hide();
-            $('#utility_table td:nth-child(3)').hide();
-            $('#utility_table tr').find("a[id='del_utility']").css({
-              "display": "none"
-            });
-            $('#utility_table tr').find("a[id='edit_utility']").css({
-              "display": "none"
-            });
-          }
-
-          $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-          })
-
-          $("#reset_folder").click(function () {
-            $("#folderdialog").dialog("close");
-          });
-
-          $("#reset_files").click(function () {
-            $("#filesdialog").dialog("close");
-          });
-
-          $('#edit_title').click(function () {
-            var title_name = $(this).attr('title_name');
-            $("#editdialog").find("#title").val(title_name);
-            $("#editdialog").dialog("open");
-          });
-
-
-          $("#submit_folder").click(function () {
-
-            event.preventDefault();
-
-            folder_name = $("#folder_name").val();
-            folder_path = $("#folder_path").val();
-
-            if (!folder_name) {
-              $("#folder_name").css({
-                "border": "1px solid red",
-                "background": "#FFCECE"
-              });
-              return false;
+                $('#utility_table th:nth-child(3)').hide();
+                $('#utility_table td:nth-child(3)').hide();
+                $('#utility_table tr').find("a[id='del_utility']").css({
+                    "display": "none"
+                });
+                $('#utility_table tr').find("a[id='edit_utility']").css({
+                    "display": "none"
+                });
             }
 
-            $.ajax({
-              url: '?r=folders/create',
-              type: 'POST',
-              data: {
-                folder_name: folder_name,
-                folder_path: folder_path
-              },
-              success: function (data) {
-                location.reload();
-                if (data) {} else {}
-              }
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            })
+
+            $("#reset_folder").click(function () {
+                $("#folderdialog").dialog("close");
             });
 
-            return false;
-
-          });
-
-
-          $("form#data").submit(function (event) {
-
-            event.preventDefault();
-
-            var formData = new FormData($(this)[0]);
-
-            $.ajax({
-              url: '?r=folders/file-upload',
-              type: 'POST',
-              cache: false,
-              async: false,
-              processData: false,
-              contentType: false,
-              data: formData,
-              success: function (data) {
-                location.reload();
-                if (data) {} else {}
-              }
+            $("#reset_files").click(function () {
+                $("#filesdialog").dialog("close");
             });
 
-            return false;
-          });
-
-
-
-          $("#edit_name").click(function () {
-            event.preventDefault();
-
-            name = $("#name").val(); ///new name
-            path = $("#path").val();
-            old_title = $("#old_title").val(); //prev name
-
-            if (!name) {
-              $("#name").css({
-                "border": "1px solid red",
-                "background": "#FFCECE"
-              });
-              return false;
-            }
-
-            $.ajax({
-              url: '?r=folders/edit',
-              type: 'POST',
-              data: {
-                name: name,
-                path: path,
-                old_title: old_title
-              },
-              success: function (data) {
-                location.reload();
-                if (data) {} else {}
-              }
+            $('#edit_title').click(function () {
+                var title_name = $(this).attr('title_name');
+                $("#editdialog").find("#title").val(title_name);
+                $("#editdialog").dialog("open");
             });
 
-            return false;
 
-          });
+            $("#submit_folder").click(function () {
+
+                event.preventDefault();
+
+                folder_name = $("#folder_name").val();
+                folder_path = $("#folder_path").val();
+
+                if (!folder_name) {
+                    $("#folder_name").css({
+                        "border": "1px solid red",
+                        "background": "#FFCECE"
+                    });
+                    return false;
+                }
+
+                $.ajax({
+                    url: '?r=folders/create',
+                    type: 'POST',
+                    data: {
+                        folder_name: folder_name,
+                        folder_path: folder_path
+                    },
+                    success: function (data) {
+                        location.reload();
+                        if (data) {} else {}
+                    }
+                });
+
+                return false;
+
+            });
 
 
-          $('#SettingsModal').on('show.bs.modal', function (e) {
-            var path = $(e.relatedTarget).data('path');
-            var old_title = $(e.relatedTarget).data('title');
-            $("#SettingsModal #path").val(path);
-            $("#SettingsModal #old_title").val(old_title);
-          });
+            $("form#data").submit(function (event) {
+
+                event.preventDefault();
+
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: '?r=folders/file-upload',
+                    type: 'POST',
+                    cache: false,
+                    async: false,
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (data) {
+                        location.reload();
+                        if (data) {} else {}
+                    }
+                });
+
+                return false;
+            });
+
+
+
+            $("#edit_name").click(function () {
+                event.preventDefault();
+
+                name = $("#name").val(); ///new name
+                path = $("#path").val();
+                old_title = $("#old_title").val(); //prev name
+
+                if (!name) {
+                    $("#name").css({
+                        "border": "1px solid red",
+                        "background": "#FFCECE"
+                    });
+                    return false;
+                }
+
+                $.ajax({
+                    url: '?r=folders/edit',
+                    type: 'POST',
+                    data: {
+                        name: name,
+                        path: path,
+                        old_title: old_title
+                    },
+                    success: function (data) {
+                        location.reload();
+                        if (data) {} else {}
+                    }
+                });
+
+                return false;
+
+            });
+
+
+            $('#SettingsModal').on('show.bs.modal', function (e) {
+                var path = $(e.relatedTarget).data('path');
+                var old_title = $(e.relatedTarget).data('title');
+                $("#SettingsModal #path").val(path);
+                $("#SettingsModal #old_title").val(old_title);
+            });
 
 
         });

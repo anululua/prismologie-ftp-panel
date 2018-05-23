@@ -111,11 +111,7 @@ class FoldersController extends Controller
           
             if($dataProvider)
             {
-                  /*return $this->render('view', [
-                    'dataProvider' => $dataProvider,
-                    'path'=>$path,
-                ]);*/
-              
+
               $user_id =Yii::$app->user->getId();
               $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
         
@@ -257,27 +253,31 @@ class FoldersController extends Controller
     //users given access to folders by admin
     public function actionAssignments(){
         
-        $user_id = Yii::$app->request->post('user_id'); 
+        $user_id = Yii::$app->request->post('user_id')?Yii::$app->request->post('user_id'):null; 
         $manage_utitlities = Yii::$app->request->post('manage_utitlities'); 
         $public_access = Yii::$app->request->post('public_access'); 
         $utility_path = Yii::$app->request->post('utility_path');
     
-        $model = new Folders();
+        $mod =  Folders::findOne(['user_id' => $user_id, 'utility_name' => $utility_path, 'manage_utilities' => $manage_utitlities,'public_access'=>$public_access]);
         
+        if ($mod == null) 
+            $model = new Folders();
+         else 
+            $model = $mod;
+                
         $model->user_id = $user_id;
         $model->utility_name = $utility_path;
         $model->manage_utilities =$manage_utitlities;
         $model->public_access = $public_access;
         
-        if($model->save())
-            return 1;
-        else
-            return 0;
-    
+        
+        if ($mod == null) 
+            $model->save();
+         else 
+            $model->update();
+            
     }
     
-
-
     
     
 }
