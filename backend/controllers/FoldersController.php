@@ -47,10 +47,16 @@ class FoldersController extends Controller
     // folder listing
     public function actionIndex()
     {     
-                        
+         
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $dataProvider = array_slice(scandir($path), 2);
-                
+        
+        if(!$dataProvider){
+            return $this->render('empty', [
+              'path'=>$path,
+            ]);
+        }
+        
         $user_id =Yii::$app->user->getId();
         $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
         
@@ -183,9 +189,15 @@ class FoldersController extends Controller
         $pathTrim = rtrim(Yii::$app->request->post('folder_path'),'/');
         $path = $pathTrim . "/". $folder_name;
         if(FileHelper::createDirectory($path, $mode = 0777))
-             return $path;
-           else
-             return 0;
+        {
+            Yii::$app->session->setFlash('success', 'Successfully created folder');
+            return $path;
+        }
+        else
+        {
+            Yii::$app->session->setFlash('error', 'Failed to create folder');
+            return 0;
+        }
     }
   
     
@@ -193,13 +205,30 @@ class FoldersController extends Controller
     public function actionFileUpload()
     {
 
-          $filename = $_FILES['file']['name'];
-          $path = $_POST['file_path'];
-          $location = $path.$filename;
-          if(move_uploaded_file($_FILES['file']['tmp_name'],$location))
-              return 1;
-          else
-              return 0;
+        $j= 0;
+        //$file_count = count($_FILES['file']['name']);
+        
+       // return $_FILES['form-data'];
+        for($i=0; $i<$file_count; $i++)
+        {
+            if(is_uploaded_file($_FILES['file']['tmp_name'][$i]))
+            {
+                $sourcePath = $_FILES['file']['tmp_name'][$i];
+                $targetPath = $_POST['file_path'].$_FILES['file']['name'][$i];
+                
+                if(move_uploaded_file($sourcePath, $targetPath)=== true) 
+                    $j++;
+            }
+        }
+
+        if($j == $file_count){
+            Yii::$app->session->setFlash('success', 'Successfully uploaded file');
+            return 1;
+        }
+        else{
+            Yii::$app->session->setFlash('error', 'Failed to upload file');
+            return 0;
+        } 
     }
 
     
@@ -221,17 +250,32 @@ class FoldersController extends Controller
         $pathTrim = rtrim(Yii::$app->request->post('path'),'/');
         $path = $pathTrim . "/";
         
-        if(is_file($path.$old_name)){
+        if(is_file($path.$old_name))
+        {
             $extension = pathinfo($path.$old_name, PATHINFO_EXTENSION);
             if(rename($path.$old_name,$path.$name.'.'.$extension))
+            {       
+                Yii::$app->session->setFlash('success', 'Successfully edited file name');
                 return 1;
+            }            
             else
+            {              
+                Yii::$app->session->setFlash('error', 'Failed to edit file');
                 return 0;
-        }else{
+            }        
+        }
+        else
+        {
             if(rename($path.$old_name,$path.$name))
+            {                
+                Yii::$app->session->setFlash('success', 'Successfully edited folder name');
                 return 1;
+            }            
             else
-                return 0;
+            {                
+                Yii::$app->session->setFlash('error', 'Failed to edit folder name');
+                return 0;   
+            }        
         }
         
     }
@@ -241,12 +285,16 @@ class FoldersController extends Controller
     public function actionDelete($path)
     {
         if(is_dir($path))
+        {
             FileHelper::removeDirectory($path);
+            Yii::$app->session->setFlash('success', 'Successfully deleted folder');
+        }
         else
+        {
             unlink(rtrim($path,'/'));
-
-        return $this->redirect(Yii::$app->request->referrer);
-
+            Yii::$app->session->setFlash('success', 'Successfully deleted file');
+        }
+        return $this->redirect(['index']);
     }
     
 
@@ -270,12 +318,10 @@ class FoldersController extends Controller
         $model->manage_utilities =$manage_utitlities;
         $model->public_access = $public_access;
         
-        
         if ($mod == null) 
-            $model->save();
+            ($model->save())? Yii::$app->session->setFlash('success', 'Assigment successfull'): Yii::$app->session->setFlash('error', 'Assigment failed');
          else 
-            $model->update();
-            
+            ($model->update())? Yii::$app->session->setFlash('success', 'Assigment successfully updated'): Yii::$app->session->setFlash('error', 'Assigment updation failed');
     }
     
     

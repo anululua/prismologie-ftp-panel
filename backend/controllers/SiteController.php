@@ -73,26 +73,6 @@ class SiteController extends Controller
         return $this->render('index');
     }
     
-    /**
-     * Displays admin homepage.
-     *
-     * @return string
-     */
-    public function actionAdmin()
-    {
-        return $this->render('admin');
-        
-    }
-    
-    /**
-     * Displays moderator homepage.
-     *
-     * @return string
-     */
-    public function actionModerator()
-    {
-        return $this->render('moderator');
-    }
 
     /**
      * Login action.
@@ -130,7 +110,8 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 if (Yii::$app->getUser()) {
-                    $this->redirect(['//admin/assignment']);
+                    Yii::$app->session->setFlash('success', 'Sorry, we are unable to reset password for the provided email address.');
+                    Yii::$app->response->redirect(array('//admin/assignment/view','id'=>$user->id));
                 }
             }
         }
@@ -139,6 +120,7 @@ class SiteController extends Controller
         ]);
     }
 
+    
     /**
      * Requests password reset.
      *
@@ -190,7 +172,7 @@ class SiteController extends Controller
     
     
     
-        /**
+    /**
      * Reset password
      * @return string
      */
@@ -217,7 +199,6 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
         return $this->goHome();
-        //return $this->redirect(['login']);
     }
     
     

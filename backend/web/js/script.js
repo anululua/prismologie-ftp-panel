@@ -55,12 +55,7 @@
                 },
                 success: function (data) {
                     location.reload();
-                    //alert(data);
-                    if (data) {
-
-                    } else {
-                        console.log(data)
-                    }
+                    if (data) {} else {}
                 },
                 error: function (data) {
                     console.log(data);
@@ -145,42 +140,69 @@
             });
 
 
-            $("#data").submit(function (e) {
+            $("#data").on('submit', function (event) {
 
                 event.preventDefault();
 
-                var formData = new FormData($(this)[0]);
-                //var file = $(".fileUpload").prop('files')[0];
+                var files = $("#fileUpload").get(0).files;
+                var formData = new FormData();
 
-                /*var formdata = new FormData();
-                formdata.append("file_video", file);*/
+                $(files).each(function (index, file) {
+                    formData.append('file[]', file);
+                });
 
+                formData.append('file_path', $('#file_path').val());
+
+                for (var key of formData.entries()) {
+                    //console.log(key[0] + ', ' + key[1]);
+                }
+                //exit;
 
                 $.ajax({
                     url: '?r=folders/file-upload',
                     type: 'POST',
-                    cache: false,
                     async: false,
-                    processData: false,
                     contentType: false,
+                    cache: false,
+                    processData: false,
                     data: formData,
-                    //data: new FormData($(this)),
                     success: function (data) {
-                        //alert(data);
-                        location.reload();
+                        console.log(data);
+                        //location.reload();
                         if (data) {} else {}
                     }
                 });
 
-                return false;
+
             });
+
+            /*$("#data").submit(function (e) {
+
+    event.preventDefault();
+    var formData = new FormData(this);
+    formData.append('file_path', $('#file_path').val());
+    $.ajax({
+        url: '?r=folders/file-upload',
+        type: 'POST',
+        cache: false,
+        async: false,
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function (data) {
+            location.reload();
+            if (data) {} else {}
+        }
+    });
+    return false;
+});*/
 
 
 
             $("#edit_name").click(function () {
                 event.preventDefault();
 
-                name = $("#name").val(); ///new name
+                name = $("#name").val(); //new name
                 path = $("#path").val();
                 old_title = $("#old_title").val(); //prev name
 

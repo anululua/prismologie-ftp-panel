@@ -32,14 +32,6 @@ $this->title = Yii::t('rbac-admin', 'Users');
                         'style' => 'width:200px;'
                     ],
             ],
-            [
-                'label' => 'Last name',
-                'attribute' => 'lname',
-                'contentOptions' => 
-                    [
-                        'style' => 'width:200px;'
-                    ],
-            ],
             'username',
             'email:email',
             [

@@ -28,7 +28,6 @@ class SignupForm extends Model
             ['fname', 'string', 'min' => 2, 'max' => 255],
             
             ['lname', 'trim'],
-            ['lname', 'required'],
             ['lname', 'string', 'min' => 2, 'max' => 255],
             
             ['username', 'trim'],
@@ -37,7 +36,6 @@ class SignupForm extends Model
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'trim'],
-            ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
