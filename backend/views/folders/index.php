@@ -43,7 +43,7 @@ $listData=ArrayHelper::map($users,'id','username');
                     <td>
                         <?php if(is_dir($path.$data)){
     
-    echo Html::a('<i class="glyphicon glyphicon-eye-open"></i>',['view','path'=>$path.$data.'/'], ['class' => 'btn btn-black', 'title' => 'View']);
+    echo Html::a('<i class="glyphicon glyphicon-eye-open"></i>',['view','path'=>$path.$data.'/','val'=>'1'], ['class' => 'btn btn-black', 'title' => 'View']);
 }else{
     
     echo Html::a('<i class="glyphicon glyphicon-download-alt"></i>',['download','path'=>$path.$data], ['class' => 'btn btn-black' , 'title' => 'Download']);
@@ -57,7 +57,7 @@ $listData=ArrayHelper::map($users,'id','username');
             </a>
                     </td>
                     <td>
-
+                        <?php if(is_dir($path.$data)){?>
                         <?=Html::dropDownList('user_list', null,$listData,['prompt' => '--- select user ---','id'=>'user_list','name'=>'user_list'], array('label' => 'Users'));?>
 
                             <input type="hidden" name="path" value="<?=$path.$data;?>" />
@@ -67,7 +67,9 @@ $listData=ArrayHelper::map($users,'id','username');
                             <input type="checkbox" title="View/Download Utilities" value="2" id="check" name="check">Public Access
 
                             <button type="button" id="user_assignment" name="user_assignment" class="btn btn-default btn-xs" onclick="submitRowAsForm('<?=$pieces[0];?>')">Save</button>
-
+                            <?php } else
+                            echo '<center>-</center>';
+                        ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

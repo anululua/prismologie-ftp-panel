@@ -65,6 +65,9 @@ class FoldersController extends Controller
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $dataProvider = array_slice(scandir($path), 2);
         
+        $file_list = array();
+        //print_r($dataProvider);
+        
         
         $user_id =Yii::$app->user->getId();
         $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
@@ -78,9 +81,14 @@ class FoldersController extends Controller
         }else
         {
             foreach ($dataProvider as &$value) 
+            {
                 $value = $path.$value;
-
+                if(is_file($value))
+                    array_push($file_list,basename($value));
+            }
           unset($value);
+            
+            //print_r($file_list);
             
             if($userRole == 'moderator')
             {
@@ -106,6 +114,12 @@ class FoldersController extends Controller
             foreach ($result as $key => $value)
               $newlist[$key] = substr($value, strrpos($value, '/') + 1);
 
+            echo '<pre>';
+            print_r($newlist);
+            print_r($file_list);
+            //array_push($newlist,$file_list);
+            //print_r($newlist);
+            exit;
             return $this->render('index', [
                 'dataProvider' => $newlist,
                 'path'=>$path,
@@ -116,10 +130,9 @@ class FoldersController extends Controller
 
     
     //dynamic folder view
-    public function actionView($path)
+    public function actionView($path,$val)
     {
-      
-
+        
         $list = scandir($path);
         $dataProvider = array_slice(scandir($path), 2);
 
@@ -131,6 +144,7 @@ class FoldersController extends Controller
               return $this->render('view', [
                       'dataProvider' => $dataProvider,
                       'path'=>$path,
+                      'val'=>++$val,
                   ]);
           }else
           {
@@ -166,6 +180,7 @@ class FoldersController extends Controller
               return $this->render('view', [
                   'dataProvider' => $newlist,
                   'path'=>$path,
+                  'val'=>++$val,
               ]);
           }
     }
