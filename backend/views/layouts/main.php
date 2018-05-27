@@ -61,11 +61,11 @@ AppAsset::register($this);
                             <li>
                                 <?= Html::a('Users', ['//admin/user']);?>
                             </li>
-                            <!--<li>
-    <?= Html::a('Roles', ['//admin/role']) ?>
-</li>-->
                             <li>
                                 <?= Html::a('Assignments', ['//admin/assignment']) ?>
+                            </li>
+                            <li>
+                                <?= Html::a('Archives', ['//folders/archives']) ?>
                             </li>
                             <?php }?>
                         </ul>

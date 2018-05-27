@@ -3,8 +3,8 @@
 namespace backend\models;
 
 use Yii;
-use mdm\admin\models\User;
-//use common\models\User;
+//use mdm\admin\models\User;
+use common\models\User;
 use yii\base\Model;
 
 /**

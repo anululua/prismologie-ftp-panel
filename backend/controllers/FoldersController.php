@@ -43,6 +43,20 @@ class FoldersController extends Controller
         ];
     }
 
+    
+    
+    public function actionArchives(){
+        
+        $path =Yii::getAlias('@backend') . "/../archives/";
+        $dataProvider = array_slice(scandir($path), 2);
+
+        return $this->render('archives', [
+              'dataProvider'=>$dataProvider,
+              'path'=>$path,
+            ]);
+        
+    }
+    
 
     // folder listing
     public function actionIndex()
@@ -51,11 +65,6 @@ class FoldersController extends Controller
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $dataProvider = array_slice(scandir($path), 2);
         
-        if(!$dataProvider){
-            return $this->render('empty', [
-              'path'=>$path,
-            ]);
-        }
         
         $user_id =Yii::$app->user->getId();
         $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
@@ -110,74 +119,55 @@ class FoldersController extends Controller
     public function actionView($path)
     {
       
-        if(is_dir($path))
-        {
-            $list = scandir($path);
-            $dataProvider = array_slice(scandir($path), 2);
-          
-            if($dataProvider)
-            {
 
-              $user_id =Yii::$app->user->getId();
-              $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
-        
-              if($userRole == 'admin')
-              {
-                  return $this->render('view', [
-                          'dataProvider' => $dataProvider,
-                          'path'=>$path,
-                      ]);
-              }else
-              {
-                  foreach ($dataProvider as &$value) 
-                      $value = $path.$value;
+        $list = scandir($path);
+        $dataProvider = array_slice(scandir($path), 2);
 
-                unset($value);
+          $user_id =Yii::$app->user->getId();
+          $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
 
-                  if($userRole == 'moderator')
-                  {
-                      $utilities = Folders::find()
-                      ->select('utility_name')
-                      ->where(['user_id' => $user_id])
-                      ->asArray()
-                      ->all();
-                  }
-                  else
-                  {
-                      $utilities = Folders::find()
-                      ->select('utility_name')
-                      ->where(['public_access' => 'true'])
-                      ->asArray()
-                      ->all();
-                  }
-
-                  $utility_names = array_column($utilities, 'utility_name');
-                  $result = array_intersect($dataProvider, $utility_names);
-
-                  $newlist = array();
-                  foreach ($result as $key => $value)
-                    $newlist[$key] = substr($value, strrpos($value, '/') + 1);
-
-                  return $this->render('view', [
-                      'dataProvider' => $newlist,
+          if($userRole == 'admin')
+          {
+              return $this->render('view', [
+                      'dataProvider' => $dataProvider,
                       'path'=>$path,
                   ]);
+          }else
+          {
+              foreach ($dataProvider as &$value) 
+                  $value = $path.$value;
+
+            unset($value);
+
+              if($userRole == 'moderator')
+              {
+                  $utilities = Folders::find()
+                  ->select('utility_name')
+                  ->where(['user_id' => $user_id])
+                  ->asArray()
+                  ->all();
               }
-              
-            }
-            else
-            {
-                return $this->render('empty', [
+              else
+              {
+                  $utilities = Folders::find()
+                  ->select('utility_name')
+                  ->where(['public_access' => 'true'])
+                  ->asArray()
+                  ->all();
+              }
+
+              $utility_names = array_column($utilities, 'utility_name');
+              $result = array_intersect($dataProvider, $utility_names);
+
+              $newlist = array();
+              foreach ($result as $key => $value)
+                $newlist[$key] = substr($value, strrpos($value, '/') + 1);
+
+              return $this->render('view', [
+                  'dataProvider' => $newlist,
                   'path'=>$path,
-                ]);
-            }
-        }
-        else
-        {
-              return $this->render('empty', [
-              'path'=>$path,
-            ]);
-        }
+              ]);
+          }
     }
     
     
@@ -206,7 +196,7 @@ class FoldersController extends Controller
     {
 
         $j= 0;
-        //$file_count = count($_FILES['file']['name']);
+        $file_count = count($_FILES['file']['name']);
         
        // return $_FILES['form-data'];
         for($i=0; $i<$file_count; $i++)
@@ -281,22 +271,45 @@ class FoldersController extends Controller
     }
 
 
-    //delete folders or files
-    public function actionDelete($path)
-    {
-        if(is_dir($path))
+        //archives folders or files
+        public function actionDelete($path)
         {
-            FileHelper::removeDirectory($path);
-            Yii::$app->session->setFlash('success', 'Successfully deleted folder');
+            $dst =Yii::getAlias('@backend') . "/../archives/";
+            $name = basename($path);
+
+            if (is_dir ( $path )) 
+            {
+                $return = FileHelper::copyDirectory($path, $dst.$name);
+                FileHelper::removeDirectory($path);
+                Yii::$app->session->setFlash('success', 'Successfully archived folder'); 
+            } 
+            else if (file_exists ( rtrim($path,'/') ))
+            {
+
+                copy(rtrim($path,'/'), $dst.$name);
+                unlink ( rtrim($path,'/') );
+                Yii::$app->session->setFlash('success', 'Successfully archived file'); 
+            }
+            return $this->redirect(['index']);
         }
-        else
-        {
-            unlink(rtrim($path,'/'));
-            Yii::$app->session->setFlash('success', 'Successfully deleted file');
-        }
-        return $this->redirect(['index']);
-    }
     
+    
+     //delete folders or files permanently from the archives folder
+        public function actionArchiveDelete($path)
+        {
+            if(is_dir($path))
+            {
+                FileHelper::removeDirectory($path);
+                Yii::$app->session->setFlash('success', 'Successfully deleted folder');
+            }
+            else
+            {
+                unlink(rtrim($path,'/'));
+                Yii::$app->session->setFlash('success', 'Successfully deleted file');
+            }
+            return $this->redirect(['archives']);
+        }
+
 
     //users given access to folders by admin
     public function actionAssignments(){

@@ -82,12 +82,12 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-             return $this->redirect(['index']);
+             return $this->render('index');
 
         }else{
             $model = new LoginForm();
             if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                 return $this->redirect(['index']);
+                 return $this->render('index');
         } else {
             $model->password = '';
             return $this->render('login', [
@@ -133,7 +133,7 @@ class SiteController extends Controller
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
 
-                return $this->goHome();
+                return $this->render('index');
             } else {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
             }
@@ -162,7 +162,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->session->setFlash('success', 'New password saved.');
 
-            return $this->redirect(['index']);
+            return $this->render('index');
         }
 
         return $this->render('resetPassword', [
@@ -178,10 +178,9 @@ class SiteController extends Controller
      */
     public function actionChangePassword($user_id)
     {
-
         $model = new ChangePassword();
         if ($model->load(Yii::$app->getRequest()->post()) && $model->change($user_id)) {
-            return $this->redirect(['index']);
+            return $this->render('index');
         }
 
         return $this->render('change-password', [
@@ -198,7 +197,7 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(['login']);
     }
     
     

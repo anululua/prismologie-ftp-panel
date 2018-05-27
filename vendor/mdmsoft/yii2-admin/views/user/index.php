@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use mdm\admin\components\Helper;
 
+use yii\helpers\Url;
+
+
 /* @var $this yii\web\View */
 /* @var $searchModel mdm\admin\models\searchs\User */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -90,14 +93,13 @@ $this->title = Yii::t('rbac-admin', 'Users');
                     }
                   ]
                 ],
-              [
-               'label' => 'Reset',
-               'format' => 'raw',
-               'value'=>function ($data) {
-                return Html::a(Html::encode("Reset"),'?r=site/request-password-reset',['class'=>'btn btn-default','title'=>'Password reset']);
-                      },
-            ],
-            /*[ 'label' => 'Change', 'format' => 'raw', 'value'=>function ($model) { return Html::a(Html::encode("Change"),'?r=site/change-password('.$model->id.')',['class'=>'btn btn-default','title'=>'Password change']); }, ],*/
+                [ 
+                    'label' => 'Change', 
+                    'format' => 'raw', 
+                    'value'=>function ($model) { 
+                        return Html::a('Change',Url::toRoute(['/site/change-password','id' => $model->id]), ['class' => 'btn btn-default', 'title' => 'Password change']);
+                    }, 
+                ],
             ],
         ]);
         ?>

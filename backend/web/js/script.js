@@ -106,7 +106,6 @@
                 $("#editdialog").dialog("open");
             });
 
-
             $("#submit_folder").click(function () {
 
                 event.preventDefault();
@@ -140,24 +139,22 @@
             });
 
 
-            $("#data").on('submit', function (event) {
+            $("#data").on('submit', function (e) {
 
                 event.preventDefault();
 
-                var files = $("#fileUpload").get(0).files;
-                var formData = new FormData();
+                //var files = $("#fileUpload").get(0).files;
+                var formData = new FormData(this);
 
-                $(files).each(function (index, file) {
+                /*$(files).each(function (index, file) {
                     formData.append('file[]', file);
-                });
+                });*/
 
                 formData.append('file_path', $('#file_path').val());
 
-                for (var key of formData.entries()) {
-                    //console.log(key[0] + ', ' + key[1]);
-                }
-                //exit;
-
+                /*for (var key of formData.entries())
+                    console.log(key[0] + ', ' + key[1]);
+*/
                 $.ajax({
                     url: '?r=folders/file-upload',
                     type: 'POST',
@@ -167,13 +164,11 @@
                     processData: false,
                     data: formData,
                     success: function (data) {
-                        console.log(data);
-                        //location.reload();
-                        if (data) {} else {}
+                        //console.log(data);
+                        location.reload();
                     }
                 });
-
-
+                return false;
             });
 
             /*$("#data").submit(function (e) {
