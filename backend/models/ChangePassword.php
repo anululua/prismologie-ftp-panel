@@ -37,9 +37,13 @@ class ChangePassword extends Model
      * Validates the password.
      * This method serves as the inline validation for password.
      */
-    public function validatePassword()
+    public function validatePassword($attribute, $params)
     {
         /* @var $user User */
+         /*echo '
+<pre>';
+         print_r($attribute);
+         print_r($params);*/
         $user = Yii::$app->user->identity;
         if (!$user || !$user->validatePassword($this->oldPassword)) {
             $this->addError('oldPassword', 'Incorrect old password.');
