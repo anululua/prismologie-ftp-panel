@@ -52,10 +52,6 @@ $controllerId = $this->context->uniqueId . '/';
                 'label' => 'First name',
                 'attribute' => 'fname',
             ],
-            [
-                'label' => 'Last name',
-                'attribute' => 'lname',
-            ],
             'username',
             'email:email',
             'created_at:date',
@@ -69,5 +65,7 @@ $controllerId = $this->context->uniqueId . '/';
         ],
     ])
     ?>
-
+            <div class="users_folders">
+                List
+            </div>
     </div>

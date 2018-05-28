@@ -52,7 +52,7 @@ use yii\web\YiiAsset
                 <input type="hidden" readonly id="file_path" name="file_path" value="<?=$path;?>" />
                 <div class="form-group">
                     <label>File</label>
-                    <input class="form-control" name="file[]" id="fileUpload" type="file"  multiple="multiple" required accept="file_extension|audio/*|video/*|image/*|media_type">
+                    <input class="form-control" name="file[]" id="fileUpload" type="file" multiple="multiple" required accept="file_extension|audio/*|video/*|image/*|media_type" max-uploads=1>
                 </div>
                 <div class="form-group">
                     <button type="submit" id="submit_files" class="btn btn-success">Add</button>

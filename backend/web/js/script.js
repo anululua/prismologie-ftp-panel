@@ -32,7 +32,7 @@ function submitRowAsForm(idRow) {
                 } else {
                     manage_utitlities = false;
                     public_access = $("#" + idRow + " td input[name=check]").prop('checked');
-                    ajaxUserAssignment(null, manage_utitlities, public_access, utility_path);
+                    ajaxUserAssignment(user_id, manage_utitlities, public_access, utility_path);
                 }
             }
         }
@@ -146,20 +146,30 @@ $(document).ready(function () {
 
     $("#data").on('submit', function (e) {
 
-        event.preventDefault();
 
-        //var files = $("#fileUpload").get(0).files;
+        event.preventDefault();
         var formData = new FormData(this);
 
-        /*$(files).each(function (index, file) {
-            formData.append('file[]', file);
-        });*/
+        file_count = $("#fileUpload").get(0).files.length;
+        imageSize = 0;
+
+        for (var i = 0; i < file_count; i++)
+            imageSize = imageSize + $("#fileUpload").get(0).files[i].size;
+
+        mb_size = (imageSize / 1048576).toFixed(3);
+
+        if (mb_size > 1024) {
+            $('#myflashwrapper').html('maximum file upload size is 1GB <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>').show();
+            return false;
+        }
+
+        if (file_count > 20) {
+            $('#myflashwrapper').html('max number of file uploads is 20 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>').show();
+            return false;
+        }
 
         formData.append('file_path', $('#file_path').val());
 
-        /*for (var key of formData.entries())
-                    console.log(key[0] + ', ' + key[1]);
-*/
         $.ajax({
             url: '?r=folders/file-upload',
             type: 'POST',
@@ -170,33 +180,11 @@ $(document).ready(function () {
             data: formData,
             success: function (data) {
                 console.log(data);
-                //location.reload();
+                location.reload();
             }
         });
         return false;
     });
-
-    /*$("#data").submit(function (e) {
-
-    event.preventDefault();
-    var formData = new FormData(this);
-    formData.append('file_path', $('#file_path').val());
-    $.ajax({
-        url: '?r=folders/file-upload',
-        type: 'POST',
-        cache: false,
-        async: false,
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function (data) {
-            location.reload();
-            if (data) {} else {}
-        }
-    });
-    return false;
-});*/
-
 
 
     $("#edit_name").click(function () {

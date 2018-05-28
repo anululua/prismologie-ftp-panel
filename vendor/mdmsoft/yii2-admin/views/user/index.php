@@ -97,7 +97,7 @@ $this->title = Yii::t('rbac-admin', 'Users');
                     'label' => 'Change', 
                     'format' => 'raw', 
                     'value'=>function ($model) { 
-                        return Html::a('Change',Url::toRoute(['/site/change-password','id' => $model->id]), ['class' => 'btn btn-default', 'title' => 'Password change']);
+                        return Html::a('Change',Url::toRoute(['/site/change-password','user_id' => $model->id]), ['class' => 'btn btn-default', 'title' => 'Password change']);
                     }, 
                 ],
             ],

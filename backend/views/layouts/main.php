@@ -91,6 +91,7 @@ AppAsset::register($this);
                             <?php }?>
                     </nav>
                     <?= Alert::widget(); ?>
+                        <div id="myflashwrapper" class="alert-danger alert fade in" style="display: none;"></div>
                         <?= $content; ?>
 
                 </div>

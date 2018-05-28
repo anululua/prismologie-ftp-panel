@@ -26,6 +26,7 @@ class ChangePassword extends Model
     {
         return [
             [['oldPassword', 'newPassword', 'retypePassword'], 'required'],
+           // [['oldPassword'], 'validatePassword'],
             [['oldPassword'], 'validatePassword'],
             [['newPassword'], 'string', 'min' => 6],
             [['retypePassword'], 'compare', 'compareAttribute' => 'newPassword'],
@@ -40,8 +41,6 @@ class ChangePassword extends Model
     {
         /* @var $user User */
         $user = Yii::$app->user->identity;
-        echo '<pre>';
-        print_r($user);
         if (!$user || !$user->validatePassword($this->oldPassword)) {
             $this->addError('oldPassword', 'Incorrect old password.');
         }

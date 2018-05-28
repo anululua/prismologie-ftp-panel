@@ -61,14 +61,11 @@ class FoldersController extends Controller
     // folder listing
     public function actionIndex()
     {     
-         
-        $path =Yii::getAlias('@backend') . "/../uploads/";
-        $dataProvider = array_slice(scandir($path), 2);
         
         $file_list = array();
-        //print_r($dataProvider);
-        
-        
+        $newlist = array();
+        $path =Yii::getAlias('@backend') . "/../uploads/";
+        $dataProvider = array_slice(scandir($path), 2);
         $user_id =Yii::$app->user->getId();
         $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
         
@@ -78,7 +75,8 @@ class FoldersController extends Controller
                     'dataProvider' => $dataProvider,
                     'path'=>$path,
                 ]);
-        }else
+        }
+        else
         {
             foreach ($dataProvider as &$value) 
             {
@@ -86,10 +84,8 @@ class FoldersController extends Controller
                 if(is_file($value))
                     array_push($file_list,basename($value));
             }
-          unset($value);
-            
-            //print_r($file_list);
-            
+            unset($value);
+                        
             if($userRole == 'moderator')
             {
                 $utilities = Folders::find()
@@ -102,7 +98,7 @@ class FoldersController extends Controller
             {
                 $utilities = Folders::find()
                 ->select('utility_name')
-                ->where(['public_access' => 'true'])
+                ->where(['public_access' => 'true','user_id' => $user_id])
                 ->asArray()
                 ->all();
             }
@@ -110,18 +106,11 @@ class FoldersController extends Controller
             $utility_names = array_column($utilities, 'utility_name');
             $result = array_intersect($dataProvider, $utility_names);
 
-            $newlist = array();
             foreach ($result as $key => $value)
               $newlist[$key] = substr($value, strrpos($value, '/') + 1);
 
-            echo '<pre>';
-            print_r($newlist);
-            print_r($file_list);
-            //array_push($newlist,$file_list);
-            //print_r($newlist);
-            exit;
             return $this->render('index', [
-                'dataProvider' => $newlist,
+                'dataProvider' => array_merge($newlist, $file_list),
                 'path'=>$path,
             ]);
         }
@@ -133,11 +122,13 @@ class FoldersController extends Controller
     public function actionView($path,$val)
     {
         
+        $file_list = array();
+        $newlist = array();
         $list = scandir($path);
         $dataProvider = array_slice(scandir($path), 2);
 
-          $user_id =Yii::$app->user->getId();
-          $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
+        $user_id =Yii::$app->user->getId();
+        $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
 
           if($userRole == 'admin')
           {
@@ -146,12 +137,19 @@ class FoldersController extends Controller
                       'path'=>$path,
                       'val'=>++$val,
                   ]);
-          }else
+          }
+        else
           {
               foreach ($dataProvider as &$value) 
-                  $value = $path.$value;
-
-            unset($value);
+              {
+                    $value = $path.$value;
+                  
+                    if(is_file($value))
+                        array_push($file_list,basename($value));
+                    if($val>=2)
+                        is_dir($value)? array_push($file_list,basename($value)):" ";
+              }
+              unset($value);
 
               if($userRole == 'moderator')
               {
@@ -165,7 +163,7 @@ class FoldersController extends Controller
               {
                   $utilities = Folders::find()
                   ->select('utility_name')
-                  ->where(['public_access' => 'true'])
+                  ->where(['public_access' => 'true','user_id' => $user_id])
                   ->asArray()
                   ->all();
               }
@@ -173,16 +171,15 @@ class FoldersController extends Controller
               $utility_names = array_column($utilities, 'utility_name');
               $result = array_intersect($dataProvider, $utility_names);
 
-              $newlist = array();
               foreach ($result as $key => $value)
                 $newlist[$key] = substr($value, strrpos($value, '/') + 1);
 
               return $this->render('view', [
-                  'dataProvider' => $newlist,
+                  'dataProvider' => array_merge($newlist, $file_list),
                   'path'=>$path,
                   'val'=>++$val,
               ]);
-          }
+            }
     }
     
     
@@ -213,7 +210,6 @@ class FoldersController extends Controller
         $j= 0;
         $file_count = count($_FILES['file']['name']);
         
-        return $_FILES['file']['tmp_name'][0];
         for($i=0; $i<$file_count; $i++)
         {
             if(is_uploaded_file($_FILES['file']['tmp_name'][$i]))
@@ -223,8 +219,6 @@ class FoldersController extends Controller
                 
                 if(move_uploaded_file($sourcePath, $targetPath)=== true) 
                     ++$j;
-            }else{
-              return "nok";
             }
         }
 
