@@ -169,8 +169,8 @@ $(document).ready(function () {
             processData: false,
             data: formData,
             success: function (data) {
-                //console.log(data);
-                location.reload();
+                console.log(data);
+                //location.reload();
             }
         });
         return false;

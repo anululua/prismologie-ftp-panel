@@ -213,7 +213,7 @@ class FoldersController extends Controller
         $j= 0;
         $file_count = count($_FILES['file']['name']);
         
-       // return $_FILES['form-data'];
+        return $_FILES['file']['tmp_name'][0];
         for($i=0; $i<$file_count; $i++)
         {
             if(is_uploaded_file($_FILES['file']['tmp_name'][$i]))
@@ -222,7 +222,9 @@ class FoldersController extends Controller
                 $targetPath = $_POST['file_path'].$_FILES['file']['name'][$i];
                 
                 if(move_uploaded_file($sourcePath, $targetPath)=== true) 
-                    $j++;
+                    ++$j;
+            }else{
+              return "nok";
             }
         }
 

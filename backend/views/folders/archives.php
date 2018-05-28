@@ -33,6 +33,9 @@ $this->title = 'Archives';
                     </td>
                     <td>
                         <?= Html::a('<i class="glyphicon glyphicon-trash"></i>',['archive-delete','path'=>$path.$data.'/'], ['class' => 'btn btn-black', 'id' => 'del_utility','title' => 'Delete']);?>
+                      <?php
+                          if(is_file($path.$data))    
+                            echo Html::a('<i class="glyphicon glyphicon-download-alt"></i>',['download','path'=>$path.$data], ['class' => 'btn btn-black', 'title' => 'Download']);?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
