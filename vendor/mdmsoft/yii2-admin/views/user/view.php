@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
 use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
@@ -66,6 +67,6 @@ $controllerId = $this->context->uniqueId . '/';
     ])
     ?>
             <div class="users_folders">
-                List
+                <?= GridView::widget(['dataProvider' => $provider]);?>
             </div>
     </div>

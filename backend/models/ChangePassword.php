@@ -3,7 +3,6 @@
 namespace backend\models;
 
 use Yii;
-//use mdm\admin\models\User;
 use common\models\User;
 use yii\base\Model;
 
@@ -15,7 +14,6 @@ use yii\base\Model;
  */
 class ChangePassword extends Model
 {
-    public $oldPassword;
     public $newPassword;
     public $retypePassword;
 
@@ -25,30 +23,13 @@ class ChangePassword extends Model
     public function rules()
     {
         return [
-            [['oldPassword', 'newPassword', 'retypePassword'], 'required'],
-           // [['oldPassword'], 'validatePassword'],
-            [['oldPassword'], 'validatePassword'],
+            [['newPassword', 'retypePassword'], 'required'],
             [['newPassword'], 'string', 'min' => 6],
             [['retypePassword'], 'compare', 'compareAttribute' => 'newPassword'],
         ];
     }
 
-    /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
-     */
-    public function validatePassword($attribute, $params)
-    {
-        /* @var $user User */
-         /*echo '
-<pre>';
-         print_r($attribute);
-         print_r($params);*/
-        $user = Yii::$app->user->identity;
-        if (!$user || !$user->validatePassword($this->oldPassword)) {
-            $this->addError('oldPassword', 'Incorrect old password.');
-        }
-    }
+
 
     /**
      * Change password.
@@ -58,9 +39,7 @@ class ChangePassword extends Model
     public function change($user_id)
     {
         if ($this->validate()) {
-            /* @var $user User */
-            //$user = Yii::$app->user->identity;
-            $user = User::findOne(['id' => $user_id, 'status' => self::STATUS_ACTIVE]);
+            $user = User::findOne(['id' => $user_id, 'status' => 10]);
             $user->setPassword($this->newPassword);
             $user->generateAuthKey();
             if ($user->update()) {

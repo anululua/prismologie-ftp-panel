@@ -98,7 +98,7 @@ $listData=ArrayHelper::map($users,'id','username');
                 <div class="modal-body">
                     <input type="hidden" value="" id="path" name="path" readonly/>
                     <input type="hidden" value="" id="old_title" name="old_title" readonly/>
-                    <input type="text" id="name" required />
+                    <input type="text" id="name" required autofocus/>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="edit_name" class="btn btn-success pull-left">Change</button>

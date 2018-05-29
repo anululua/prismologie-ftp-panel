@@ -53,11 +53,7 @@ function ajaxUserAssignment(user_id, manage_utitlities, public_access, utility_p
         },
         success: function (data) {
             location.reload();
-            if (data) {} else {}
         },
-        error: function (data) {
-            console.log(data);
-        }
     });
 
     return false;
@@ -135,7 +131,6 @@ $(document).ready(function () {
             },
             success: function (data) {
                 location.reload();
-                if (data) {} else {}
             }
         });
 
@@ -179,7 +174,6 @@ $(document).ready(function () {
             processData: false,
             data: formData,
             success: function (data) {
-                console.log(data);
                 location.reload();
             }
         });
@@ -212,7 +206,6 @@ $(document).ready(function () {
             },
             success: function (data) {
                 location.reload();
-                if (data) {} else {}
             }
         });
 

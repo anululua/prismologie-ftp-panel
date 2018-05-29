@@ -18,6 +18,9 @@ use yii\web\NotFoundHttpException;
 use yii\base\UserException;
 use yii\mail\BaseMailer;
 
+use yii\data\ArrayDataProvider;
+use yii\helpers\FileHelper;
+
 /**
  * User controller
  */
@@ -91,6 +94,50 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        
+        $newlist = array();
+        $path =Yii::getAlias('@backend') . "/../uploads/";
+        $dataProvider = array_slice(scandir($path), 2);
+        $user_id =Yii::$app->user->getId();
+        $userRole = array_keys(yii::$app->authManager->getRolesByUser($id))[0];
+
+        foreach($dataProvider as $value)
+            array_push($newlist, array("name"=>$value));
+
+        
+        $directories = FileHelper::findDirectories($path, ['recursive' => true]);
+        
+        echo '<pre>';
+        foreach($directories as $key =>$value)
+        {
+            echo $key.'-'.$value.'<br>';
+            //echo '<br>';
+            //echo mb_substr(pathinfo('_' . $value, PATHINFO_FILENAME), 0, null, '8bit');
+        }
+            
+        
+        //print_r($directories);
+        echo '</pre>';
+        
+        $provider = new ArrayDataProvider([
+            'allModels' => $newlist,
+            'pagination' => false,
+        ]);
+
+        if($userRole == 'admin')
+        {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+                'provider' => $provider
+            ]);
+        }
+        else if($userRole == 'moderator'){
+            
+        }
+        else if($userRole == 'public'){
+            
+        }
+        
         return $this->render('view', [
                 'model' => $this->findModel($id),
         ]);

@@ -122,57 +122,6 @@ class SiteController extends Controller
 
     
     /**
-     * Requests password reset.
-     *
-     * @return mixed
-     */
-    public function actionRequestPasswordReset()
-    {
-        $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
-                return $this->render('index');
-            } else {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-            }
-        }
-
-        return $this->render('requestPasswordResetToken', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Resets password.
-     *
-     * @param string $token
-     * @return mixed
-     * @throws BadRequestHttpException
-     */
-    public function actionResetPassword($token)
-    {
-        try {
-            $model = new ResetPasswordForm($token);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
-
-            return $this->render('index');
-        }
-
-        return $this->render('resetPassword', [
-            'model' => $model,
-        ]);
-    }
-    
-    
-    
-    /**
      * Reset password
      * @return string
      */
@@ -180,9 +129,9 @@ class SiteController extends Controller
     {
         $model = new ChangePassword();
         if ($model->load(Yii::$app->getRequest()->post()) && $model->change($user_id)) {
-            return $this->render('index');
+            Yii::$app->session->setFlash('success', 'New password saved');
+            return $this->redirect(['admin/user']);
         }
-
         return $this->render('change-password', [
                 'model' => $model,
         ]);

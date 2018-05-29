@@ -18,14 +18,12 @@ $this->title = 'Change Password';
         <div class="row">
             <div class="col-lg-5">
                 <?php $form = ActiveForm::begin(['id' => 'form-change']); ?>
-                <?= $form->field($model, 'oldPassword')->passwordInput() ?>
-                    <?= $form->field($model, 'newPassword')->passwordInput() ?>
-                        <?= $form->field($model, 'retypePassword')->passwordInput() ?>
-                            <div class="form-group">
-                                <?= Html::submitButton('Change', ['class' => 'btn btn-primary', 'name' => 'change-button']) ?>
-
-                            </div>
-                            <?php ActiveForm::end(); ?>
+                <?= $form->field($model, 'newPassword')->passwordInput() ?>
+                    <?= $form->field($model, 'retypePassword')->passwordInput() ?>
+                        <div class="form-group">
+                            <?= Html::submitButton('Change', ['class' => 'btn btn-primary', 'name' => 'change-button']) ?>
+                        </div>
+                        <?php ActiveForm::end(); ?>
             </div>
         </div>
     </div>
