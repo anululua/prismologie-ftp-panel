@@ -102,37 +102,32 @@ class UserController extends Controller
             foreach($directories as $value)
                 $file_url[]["name"]= str_replace(Yii::getAlias('@backend/../uploads/\\'), '', $value);
         }
-        else if($userRole == 'moderator')
+        else 
         {
-            $utilities = Folders::find()
-            ->select('utility_name')
-            ->where(['user_id' => $id])
-            ->asArray()
-            ->all();
-        }
-        else if($userRole == 'public')
-        {
-            $utilities = Folders::find()
-            ->select('utility_name')
-            ->where(['public_access' => 'true','user_id' => $id])
-            ->asArray()
-            ->all();
-        }
-        
-        foreach($directories as $value)
-            $new[] = str_replace(Yii::getAlias('/uploads/\\'), '/uploads/', $value);
-        
-        $utility_names = array_column($utilities, 'utility_name');
-        $result = array_intersect($new, $utility_names);
-        
-
             
-        echo '<pre>';
-        print_r($result);
-        echo '</pre>';
-        exit;
-
+            if($userRole == 'moderator')
+            {
+                $utilities = Folders::find()
+                ->select('utility_name')
+                ->where(['user_id' => $id])
+                ->asArray()
+                ->all();
+            }
+             if($userRole == 'public')
+            {
+                $utilities = Folders::find()
+                ->select('utility_name')
+                ->where(['public_access' => 'true','user_id' => $id])
+                ->asArray()
+                ->all();
+            }
         
+            foreach($directories as $value)
+                $new[] = str_replace(Yii::getAlias('/uploads/\\'), '/uploads/', $value);
+
+            $utility_names = array_column($utilities, 'utility_name');
+            $result = array_intersect($new, $utility_names);
+        }    
         
         $provider = new ArrayDataProvider([
             'allModels' => $file_url,
