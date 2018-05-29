@@ -45,7 +45,8 @@ class FoldersController extends Controller
 
     
     
-    public function actionArchives(){
+    public function actionArchives()
+    {
         
         $path =Yii::getAlias('@backend') . "/../archives/";
         $dataProvider = array_slice(scandir($path), 2);
@@ -54,7 +55,6 @@ class FoldersController extends Controller
               'dataProvider'=>$dataProvider,
               'path'=>$path,
             ]);
-        
     }
     
 

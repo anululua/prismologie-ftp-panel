@@ -3,13 +3,9 @@
 namespace mdm\admin\controllers;
 
 use Yii;
-use mdm\admin\models\form\Login;
-use mdm\admin\models\form\PasswordResetRequest;
-use mdm\admin\models\form\ResetPassword;
-use mdm\admin\models\form\Signup;
-use mdm\admin\models\form\ChangePassword;
 use mdm\admin\models\User;
 use mdm\admin\models\searchs\User as UserSearch;
+use mdm\admin\models\form\ChangePassword;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -20,6 +16,7 @@ use yii\mail\BaseMailer;
 
 use yii\data\ArrayDataProvider;
 use yii\helpers\FileHelper;
+use backend\models\Folders;
 
 /**
  * User controller
@@ -95,52 +92,59 @@ class UserController extends Controller
     public function actionView($id)
     {
         
-        $newlist = array();
         $path =Yii::getAlias('@backend') . "/../uploads/";
-        $dataProvider = array_slice(scandir($path), 2);
         $user_id =Yii::$app->user->getId();
         $userRole = array_keys(yii::$app->authManager->getRolesByUser($id))[0];
-
-        foreach($dataProvider as $value)
-            array_push($newlist, array("name"=>$value));
-
-        
         $directories = FileHelper::findDirectories($path, ['recursive' => true]);
-        
-        echo '<pre>';
-        foreach($directories as $key =>$value)
-        {
-            echo $key.'-'.$value.'<br>';
-            //echo '<br>';
-            //echo mb_substr(pathinfo('_' . $value, PATHINFO_FILENAME), 0, null, '8bit');
-        }
-            
-        
-        //print_r($directories);
-        echo '</pre>';
-        
-        $provider = new ArrayDataProvider([
-            'allModels' => $newlist,
-            'pagination' => false,
-        ]);
-
+    
         if($userRole == 'admin')
         {
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-                'provider' => $provider
-            ]);
+            foreach($directories as $value)
+                $file_url[]["name"]= str_replace(Yii::getAlias('@backend/../uploads/\\'), '', $value);
         }
-        else if($userRole == 'moderator'){
+        else if($userRole == 'moderator')
+        {
+            $utilities = Folders::find()
+            ->select('utility_name')
+            ->where(['user_id' => $id])
+            ->asArray()
+            ->all();
+        }
+        else if($userRole == 'public')
+        {
+            $utilities = Folders::find()
+            ->select('utility_name')
+            ->where(['public_access' => 'true','user_id' => $id])
+            ->asArray()
+            ->all();
+        }
+        
+        foreach($directories as $value)
+            $new[] = str_replace(Yii::getAlias('/uploads/\\'), '/uploads/', $value);
+        
+        $utility_names = array_column($utilities, 'utility_name');
+        $result = array_intersect($new, $utility_names);
+        
+
             
-        }
-        else if($userRole == 'public'){
-            
-        }
+        echo '<pre>';
+        print_r($result);
+        echo '</pre>';
+        exit;
+
+        
+        
+        $provider = new ArrayDataProvider([
+            'allModels' => $file_url,
+            'pagination' => [
+                'pageSize' => 6,
+            ],
+        ]);
         
         return $this->render('view', [
                 'model' => $this->findModel($id),
-        ]);
+                'provider' => $provider
+            ]);
     }
 
     /**
@@ -157,116 +161,6 @@ class UserController extends Controller
     }
 
     /**
-     * Login
-     * @return string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->getUser()->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new Login();
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                    'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Logout
-     * @return string
-     */
-    public function actionLogout()
-    {
-        Yii::$app->getUser()->logout();
-
-        return $this->goHome();
-    }
-
-    /**
-     * Signup new user
-     * @return string
-     */
-    public function actionSignup()
-    {
-        $model = new Signup();
-        if ($model->load(Yii::$app->getRequest()->post())) {
-            if ($user = $model->signup()) {
-                return $this->goHome();
-            }
-        }
-
-        return $this->render('signup', [
-                'model' => $model,
-        ]);
-    }
-
-    /**
-     * Request reset password
-     * @return string
-     */
-    public function actionRequestPasswordReset()
-    {
-        $model = new PasswordResetRequest();
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->getSession()->setFlash('success', 'Check your email for further instructions.');
-
-                return $this->goHome();
-            } else {
-                Yii::$app->getSession()->setFlash('error', 'Sorry, we are unable to reset password for email provided.');
-            }
-        }
-
-        return $this->render('requestPasswordResetToken', [
-                'model' => $model,
-        ]);
-    }
-
-    /**
-     * Reset password
-     * @return string
-     */
-    public function actionResetPassword($token)
-    {
-        try {
-            $model = new ResetPassword($token);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->getSession()->setFlash('success', 'New password was saved.');
-
-            return $this->goHome();
-        }
-
-        return $this->render('resetPassword', [
-                'model' => $model,
-        ]);
-    }
-
-    /**
-     * Reset password
-     * @return string
-     */
-    public function actionChangePassword()
-    {
-        $model = new ChangePassword();
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
-            return $this->goHome();
-        }
-
-        return $this->render('change-password', [
-                'model' => $model,
-        ]);
-    }
-
-    /**
      * Activate new user
      * @param integer $id
      * @return type
@@ -280,13 +174,15 @@ class UserController extends Controller
         if ($user->status == User::STATUS_INACTIVE) {
             $user->status = User::STATUS_ACTIVE;
             if ($user->save()) {
-                $this->redirect(['//admin/user']);
+                Yii::$app->session->setFlash('success', 'Successfully activated user');
+                $this->redirect(['index']);
             } else {
+                Yii::$app->session->setFlash('success', 'Error!! please try again');
                 $errors = $user->firstErrors;
                 throw new UserException(reset($errors));
             }
         }
-        $this->redirect(['//admin/user']);
+        $this->redirect(['index']);
     }
 
     
@@ -305,13 +201,32 @@ class UserController extends Controller
             
             $user->status = User::STATUS_INACTIVE;
             if ($user->save()) {
-                $this->redirect(['//admin/user']);
+                Yii::$app->session->setFlash('success', 'Successfully deactivated user');
+                $this->redirect(['index']);
             } else {
+                Yii::$app->session->setFlash('success', 'Error!! please try again');
                 $errors = $user->firstErrors;
                 throw new UserException(reset($errors));
             }
         }
-        $this->redirect(['//admin/user']);
+        $this->redirect(['index']);
+    }
+    
+    /**
+     * Reset password
+     * @return string
+     */
+    public function actionChangePassword($user_id)
+    {
+        $model = new ChangePassword();
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->change($user_id)) {
+            Yii::$app->session->setFlash('success', 'New password saved');
+            //User::findOne($user_id)->logout();
+            return $this->redirect(['index']);
+        }
+        return $this->render('change-password', [
+                'model' => $model,
+        ]);
     }
     /**
      * Finds the User model based on its primary key value.

@@ -8,7 +8,6 @@ use common\models\LoginForm;
 use backend\models\PasswordResetRequestForm;
 use backend\models\ResetPasswordForm;
 use backend\models\SignupForm;
-use backend\models\ChangePassword;
 
 
 /**
@@ -117,23 +116,6 @@ class SiteController extends Controller
         }
         return $this->render('signup', [
             'model' => $model,
-        ]);
-    }
-
-    
-    /**
-     * Reset password
-     * @return string
-     */
-    public function actionChangePassword($user_id)
-    {
-        $model = new ChangePassword();
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->change($user_id)) {
-            Yii::$app->session->setFlash('success', 'New password saved');
-            return $this->redirect(['admin/user']);
-        }
-        return $this->render('change-password', [
-                'model' => $model,
         ]);
     }
     
