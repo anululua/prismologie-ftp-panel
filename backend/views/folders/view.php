@@ -19,10 +19,10 @@ $listData=ArrayHelper::map($users,'id','username');
             <?= Html::encode($this->title) ?>
         </h1>
 
-        <div class="col-md-9">
+        <div class="col-md-9 table-responsive">
             <input type="hidden" readonly value="<?=$val;?>" id="user_assignment_access" />
             <?php if(!empty($dataProvider)){?>
-            <table class="table table-striped" name="utility_table" id="utility_table">
+            <table class="table table-striped " name="utility_table" id="utility_table">
                 <colgroup>
                     <col span="1" style="width: 20%;">
                     <col span="1" style="width: 20%;">

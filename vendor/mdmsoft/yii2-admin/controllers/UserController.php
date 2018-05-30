@@ -91,7 +91,7 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        
+        $file_url=[];
         $path =Yii::getAlias('@backend') . "/../uploads/";
         $user_id =Yii::$app->user->getId();
         $userRole = array_keys(yii::$app->authManager->getRolesByUser($id))[0];
@@ -122,17 +122,16 @@ class UserController extends Controller
                 ->all();
             }
         
-            foreach($directories as $value)
-                $new[] = str_replace(Yii::getAlias('/uploads/\\'), '/uploads/', $value);
-
             $utility_names = array_column($utilities, 'utility_name');
-            $result = array_intersect($new, $utility_names);
+            
+            foreach($utility_names as $value)
+                $file_url[]["name"] = str_replace(Yii::getAlias('@backend/../uploads/'), '', $value);
         }    
         
         $provider = new ArrayDataProvider([
             'allModels' => $file_url,
             'pagination' => [
-                'pageSize' => 6,
+                'pageSize' => 5,
             ],
         ]);
         
