@@ -57,7 +57,7 @@ $this->title = Yii::t('rbac-admin', 'Users');
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header'=>'Action', 
-                'template' => Helper::filterActionColumn(['view', 'activate','deactivate', 'delete']), //'update',
+                'template' => Helper::filterActionColumn(['view', 'activate','deactivate', 'delete']),
                 'contentOptions' => 
                     [
                         'style' => 'width:100px;'

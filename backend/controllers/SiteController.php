@@ -92,10 +92,8 @@ class SiteController extends Controller
             return $this->render('login', [
                 'model' => $model,
             ]);
+            }
         }
-        }
-
-
     }
 
     /**
@@ -128,7 +126,7 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->redirect(['login']);
+        return $this->redirect(['site/']);
     }
     
     

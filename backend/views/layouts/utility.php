@@ -24,15 +24,16 @@ use yii\web\YiiAsset
             'autoOpen'=>false,
             'dialogClass'=>'no-close',
           ],
-        ]); 
-        
-        echo '<div class="dialog_input"><input type="text" id="folder_name" name ="folder_name required"/></div>';
-        echo '<input type="hidden" readonly id="folder_path" name ="folder_path" value ='.$path.'/>';
-        echo '</br>';
-        echo '<button type="submit" id="submit_folder" class="btn btn-success">Add</button>';
-        echo '<button type="reset" id="reset_folder" class="btn btn-success pull-right">Cancel</button>';
+        ]); ?>
 
-      Dialog::end(); ?>
+        <div class="dialog_input">
+            <input type="text" id="folder_name" pattern="[a-zA-Z0-9]" name="folder_name" required />
+        </div>
+        <input type="hidden" readonly id="folder_path" name="folder_path" value='<?=$path;?>' />
+        <br>
+        <button type="submit" id="submit_folder" class="btn btn-success">Add</button>
+        <button type="reset" id="reset_folder" class="btn btn-success pull-right">Cancel</button>
+        <?php Dialog::end(); ?>
 
         <?php
         

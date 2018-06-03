@@ -31,3 +31,6 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 
+#index.php
+/index-test.php
+/robots.txt

@@ -18,6 +18,9 @@ use yii\data\ArrayDataProvider;
 use yii\helpers\FileHelper;
 use backend\models\Folders;
 
+use yii\filters\AccessControl;
+
+
 /**
  * User controller
  */
@@ -30,14 +33,16 @@ class UserController extends Controller
      */
     public function behaviors()
     {
+        /*return [ 'verbs' => [ 'class' => VerbFilter::className(), 'actions' => [ 'delete' => ['post'], 'logout' => ['post'], 'activate' => ['post'], 'deactivate' => ['post'], ], ], ];*/
+        
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                    'logout' => ['post'],
-                    'activate' => ['post'],
-                    'deactivate' => ['post'],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
                 ],
             ],
         ];
@@ -92,19 +97,25 @@ class UserController extends Controller
     public function actionView($id)
     {
         $file_url=[];
-        $path =Yii::getAlias('@backend') . "/../uploads/";
+        $path= Yii::getAlias('@webroot').'/uploads/';
         $user_id =Yii::$app->user->getId();
-        $userRole = array_keys(yii::$app->authManager->getRolesByUser($id))[0];
+        
+        if(!empty(yii::$app->authManager->getRolesByUser($id)))
+            $userRole = array_keys(yii::$app->authManager->getRolesByUser($id))[0];            
+        
         $directories = FileHelper::findDirectories($path, ['recursive' => true]);
-    
-        if($userRole == 'admin')
+        
+        if(!isset($userRole)){
+            $file_url = [];
+        }
+        else if($userRole == 'admin')
         {
             foreach($directories as $value)
-                $file_url[]["name"]= str_replace(Yii::getAlias('@backend/../uploads/\\'), '', $value);
+                $file_url[]["name"]= str_replace(Yii::getAlias('@webroot/uploads/\\'), '', $value);
         }
         else 
         {
-            
+
             if($userRole == 'moderator')
             {
                 $utilities = Folders::find()
@@ -125,7 +136,8 @@ class UserController extends Controller
             $utility_names = array_column($utilities, 'utility_name');
             
             foreach($utility_names as $value)
-                $file_url[]["name"] = str_replace(Yii::getAlias('@backend/../uploads/'), '', $value);
+                $file_url[]["name"] = str_replace(Yii::getAlias('@webroot/uploads/'), '', $value);
+            
         }    
         
         $provider = new ArrayDataProvider([
@@ -149,7 +161,12 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
+        if($id ==1){
+            Yii::$app->session->setFlash('error', 'cannot delete super admin');
+            return $this->redirect(['index']);
+        }
         $this->findModel($id)->delete();
+        Folders::deleteAll('user_id = :user_id', [':user_id' => $id]);
         Yii::$app->session->setFlash('success', 'Successfully deleted user');
         return $this->redirect(['index']);
     }
@@ -169,14 +186,14 @@ class UserController extends Controller
             $user->status = User::STATUS_ACTIVE;
             if ($user->save()) {
                 Yii::$app->session->setFlash('success', 'Successfully activated user');
-                $this->redirect(['index']);
+                return $this->redirect(['index']);
             } else {
                 Yii::$app->session->setFlash('success', 'Error!! please try again');
                 $errors = $user->firstErrors;
                 throw new UserException(reset($errors));
             }
         }
-        $this->redirect(['index']);
+        return $this->redirect(['index']);
     }
 
     
@@ -189,6 +206,10 @@ class UserController extends Controller
      */
     public function actionDeactivate($id)
     {
+        if($id ==1){
+            Yii::$app->session->setFlash('error', 'cannot deactivate super admin');
+            return $this->redirect(['index']);
+        }
         /* @var $user User */
         $user = $this->findModel($id);
         if ($user->status == User::STATUS_ACTIVE) {
@@ -203,7 +224,7 @@ class UserController extends Controller
                 throw new UserException(reset($errors));
             }
         }
-        $this->redirect(['index']);
+        return $this->redirect(['index']);
     }
     
     /**
@@ -215,7 +236,6 @@ class UserController extends Controller
         $model = new ChangePassword();
         if ($model->load(Yii::$app->getRequest()->post()) && $model->change($user_id)) {
             Yii::$app->session->setFlash('success', 'New password saved');
-            //User::findOne($user_id)->logout();
             return $this->redirect(['index']);
         }
         return $this->render('change-password', [

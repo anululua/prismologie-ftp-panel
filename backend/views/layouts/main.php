@@ -85,7 +85,7 @@ AppAsset::register($this);
                         <?php
                     if (!Yii::$app->user->isGuest){?>
                             <div class="pull-right">
-                                <?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['site/logout'], ['class' => 'btn btn-link logout'], ['data' => ['method' => 'post']]); ?>
+                                <?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['//site/logout'], ['class' => 'btn btn-link logout'], ['data' => ['method' => 'post']]); ?>
 
                             </div>
                             <?php }?>

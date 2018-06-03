@@ -27,15 +27,10 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'site/*',
-            'gii/*',
-            'admin/*',
+            'admin/assignment/*',
+            'admin/user/*',
             'folder/*',
-            'user/security/*', // login and logout
-            'user/recovery/*', // change password
-            'user/settings/*', // edit self infos
-            'user/profile/*', // user Profile
-            // The actions listed here will be allowed to everyone including guests.
-            // So, 'admin/*' should not appear here in the production, of course.
+
         ]
     ],
 ];

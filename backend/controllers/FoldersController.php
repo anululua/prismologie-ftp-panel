@@ -48,7 +48,7 @@ class FoldersController extends Controller
     public function actionArchives()
     {
         
-        $path =Yii::getAlias('@backend') . "/../archives/";
+        $path= Yii::getAlias('@webroot').'/archives/';
         $dataProvider = array_slice(scandir($path), 2);
 
         return $this->render('archives', [
@@ -64,7 +64,7 @@ class FoldersController extends Controller
         
         $file_list = array();
         $newlist = array();
-        $path =Yii::getAlias('@backend') . "/../uploads/";
+        $path= Yii::getAlias('@webroot').'/uploads/';
         $dataProvider = array_slice(scandir($path), 2);
         $user_id =Yii::$app->user->getId();
         $userRole = array_keys(yii::$app->authManager->getRolesByUser($user_id))[0];
@@ -285,13 +285,15 @@ class FoldersController extends Controller
         //archives folders or files
         public function actionDelete($path)
         {
-            $dst =Yii::getAlias('@backend') . "/../archives/";
+            
+            $dst= Yii::getAlias('@webroot').'/archives/';
             $name = basename($path);
 
             if (is_dir ( $path )) 
             {
                 $return = FileHelper::copyDirectory($path, $dst.$name);
                 FileHelper::removeDirectory($path);
+                Folders::deleteAll('utility_name = :utility_name', [':utility_name' => rtrim($path,'/')]);
                 Yii::$app->session->setFlash('success', 'Successfully archived folder'); 
             } 
             else if (file_exists ( rtrim($path,'/') ))

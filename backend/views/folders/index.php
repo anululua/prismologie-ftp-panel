@@ -35,8 +35,11 @@ $listData=ArrayHelper::map($users,'id','username');
                 </thead>
 
                 <?php foreach ($dataProvider as $data): ?>
-                <?php $pieces = explode(".", $data);?>
-                <tr id="<?=$pieces[0];?>">
+                <?php 
+                    $string = explode(".", $data); 
+                    $pieces = str_replace(' ', '', $string[0]);
+                ?>
+                <tr id="<?=$pieces;?>">
                     <td>
                         <?php echo Html::a($data); ?>
                     </td>
@@ -66,7 +69,7 @@ $listData=ArrayHelper::map($users,'id','username');
 
                             <input type="checkbox" title="View/Download Utilities" value="2" id="check" name="check">Public Access
 
-                            <button type="button" id="user_assignment" name="user_assignment" class="btn btn-default btn-xs" onclick="submitRowAsForm('<?=$pieces[0];?>')">Save</button>
+                            <button type="button" id="user_assignment" name="user_assignment" class="btn btn-default btn-xs" onclick="submitRowAsForm('<?=$pieces;?>')">Save</button>
                             <?php } else
                             echo '<center>-</center>';
                         ?>
