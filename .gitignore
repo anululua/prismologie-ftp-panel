@@ -21,10 +21,10 @@ Thumbs.db
 #/vendor
 
 # archives dir
-/archives/
+#/archives/
 
 # uploads dir
-/uploads/
+#/uploads/
 
 # composer itself is not needed
 composer.phar
