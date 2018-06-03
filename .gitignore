@@ -20,12 +20,6 @@ Thumbs.db
 # composer vendor dir
 #/vendor
 
-# archives dir
-/archives/
-
-# uploads dir
-/uploads/
-
 # composer itself is not needed
 composer.phar
 
